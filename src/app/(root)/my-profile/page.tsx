@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { FiEdit3 } from "react-icons/fi";
 import {
   Card,
   CardContent,
@@ -27,10 +28,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Loader2 } from "lucide-react";
+import { Edit, Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { User } from "next-auth";
 import { passwordSchema } from "@/schemas/passwordSchema";
+import Image from "next/image";
 
 const MyProfile = () => {
   const { toast } = useToast();
@@ -62,6 +64,7 @@ const MyProfile = () => {
       const response = await axios.get<ApiResponse>("/api/user");
       if (response.data.success) {
         form.reset(response.data.data);
+        setUserDetails(response.data.data);
       } else {
         console.log(response.data.message);
       }
@@ -150,6 +153,47 @@ const MyProfile = () => {
     }
   };
 
+  const onAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await axios.put<ApiResponse>(
+        "/api/user/change-avatar", // Replace with your actual API endpoint
+        formData
+      );
+
+      if (response.data.success) {
+        fetchUserDetails();
+        toast({
+          title: "Success",
+          description: response.data.message,
+          variant: "default",
+        });
+      } else {
+        toast({
+          title: "Update Failed",
+          description: response.data.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>;
+      let errorMessage =
+        axiosError.response?.data.message ||
+        "There was a problem updating your profile picture. Please try again.";
+
+      toast({
+        title: "Update Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="flex justify-center items-center flex-col py-10">
       <Tabs
@@ -167,6 +211,28 @@ const MyProfile = () => {
               <CardDescription>
                 Make changes to your account here. Click save when you are done.
               </CardDescription>
+              <div className="relative mx-auto py-2">
+                <Image
+                  src={userDetails?.avatar || "/profile-pic.png"} // replace with your image path
+                  alt="User Avatar"
+                  width={64}
+                  height={64}
+                  className="w-24 h-24 object-cover rounded-full"
+                />
+                <label
+                  htmlFor="avatarUpload"
+                  className="absolute bottom-2 right-2 bg-gray-800 text-white p-2 rounded-full cursor-pointer"
+                >
+                  <Edit className="w-4 h-4" />
+                </label>
+                <input
+                  type="file"
+                  id="avatarUpload"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={onAvatarChange}
+                />
+              </div>
             </CardHeader>
 
             <CardContent className="space-y-2">

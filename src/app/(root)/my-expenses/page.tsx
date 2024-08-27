@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,7 +21,6 @@ import { Loader2 } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -46,18 +44,40 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiOutlineEdit } from "react-icons/ai";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const Expenses = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [date, setDate] = useState<Date>();
   const [budgetCategories, setBudgetCategories] = useState<any>({});
+
   const { data: session } = useSession();
   const [expenses, setExpenses] = useState<any[]>([]); // State to store threads
+  const [timeFilter, setTimeFilter] = useState<string | null>(null);
+  const [searchCategory, setSearchCategory] = useState<string | null>(null);
   const user: User = session?.user;
   const { toast } = useToast();
-
 
   const form = useForm<z.infer<typeof expenseSchema>>({
     resolver: zodResolver(expenseSchema),
@@ -85,10 +105,17 @@ const Expenses = () => {
     }
   }, []);
 
+  
 
   const fetchUserExpenses = useCallback(async () => {
     try {
-      const response = await axios.get<any>("/api/expense/get-expenses");
+      const response = await axios.get<any>("/api/expense/get-expenses", {
+        params: {
+          time: timeFilter,
+          search: searchCategory,
+        },
+      });
+
       if (response.data.success) {
         setExpenses(response.data.data);
       } else {
@@ -100,7 +127,7 @@ const Expenses = () => {
         axiosError.response?.data.message ??
         "Error while fetching expenses details";
     }
-  }, []);
+  }, [timeFilter, searchCategory]);
 
   useEffect(() => {
     if (session) {
@@ -123,6 +150,10 @@ const Expenses = () => {
       });
 
       setIsSubmitting(false);
+
+      if (response.data.success) {
+        fetchUserExpenses();
+      }
     } catch (error) {
       console.error("Error during expense creation:", error);
 
@@ -143,23 +174,45 @@ const Expenses = () => {
     }
   };
 
+  const handleDeleteExpense = async (expenseId: string) => {
+    try {
+      const response = await axios.delete(
+        `/api/expense/delete-expense/${expenseId}`
+      );
+      if (response.data.success) {
+        toast({
+          title: "Delete Expense",
+          description: response.data.message,
+          variant: "default",
+        });
+        fetchUserExpenses();
+      } else {
+        toast({
+          title: "Error deleting Expense",
+          description: response.data.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting Expense", error);
+    }
+  };
+
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
-  
+
     // Extract day, month, and year
     const day = date.getUTCDate();
     const month = date.getUTCMonth() + 1; // Months are zero-based
     const year = date.getUTCFullYear();
-  
+
     // Return the formatted date as '10/9/2024' (day/month/year)
     return `${day}/${month}/${year}`;
   };
-  
-  
 
   return (
     <div className="py-10">
-      <Card className="w-[350px] sm:w-[450px] md:w-[600px]  mx-auto lg:ml-20">
+      <Card className="w-[350px] sm:w-[450px] md:w-[600px]  mx-auto lg:ml-20 border border-gray-200">
         <CardHeader>
           <CardTitle>Add New Expense</CardTitle>
           <CardDescription>
@@ -242,7 +295,7 @@ const Expenses = () => {
                     <FormLabel>Category</FormLabel>
                     <Select onValueChange={(value) => field.onChange(value)}>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select a timezone" />
+                        <SelectValue placeholder="Select a Category" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
@@ -279,22 +332,25 @@ const Expenses = () => {
           </Form>
         </CardContent>
       </Card>
-      <div className="mx-auto lg:ml-20 ml-5">
+      <div className="mx-auto lg:ml-20 ml-5 px-8 lg:pr-4">
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-20 pb-10 px-5 border-y border-blue-500">
           <div className="flex py-2 flex-col sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
             <div className="mt-2">
-              <Select>
+              <Select
+                defaultValue=""
+                onValueChange={(value) => setTimeFilter(value)}
+              >
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select a fruit" />
+                  <SelectValue placeholder="Select a Time" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
-                    <SelectLabel>Fruits</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                    <SelectLabel>Select Time</SelectLabel>
+                    <SelectItem value="last 7 days">Last 7 days</SelectItem>
+                    <SelectItem value="last 30 days">Last 30 days</SelectItem>
+                    <SelectItem value="last month">Last month</SelectItem>
+                    <SelectItem value="last 6 months">Last 6 months</SelectItem>
+                    <SelectItem value="last year">Last year</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -323,7 +379,9 @@ const Expenses = () => {
                 type="text"
                 id="table-search"
                 className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Search for items"
+                placeholder="Search Category"
+                value={searchCategory || ""}
+                onChange={(e) => setSearchCategory(e.target.value)}
               />
             </div>
           </div>
@@ -340,9 +398,7 @@ const Expenses = () => {
                 <th scope="col" className="px-6 py-3">
                   Amount
                 </th>
-                <th scope="col" className="px-6 py-3">
-                  Edit
-                </th>
+
                 <th scope="col" className="px-6 py-3">
                   Delete
                 </th>
@@ -357,16 +413,65 @@ const Expenses = () => {
                   <td className="px-6 py-4">{formatDate(expense.date)}</td>
                   <td className="px-6 py-4">{expense.category}</td>
                   <td className="px-6 py-4">${expense.amount}</td>
-                  <td className="px-6 py-4 text-blue-500">
-                    <AiOutlineEdit size={20} />
-                  </td>
+
                   <td className="px-6 py-4 text-red-600">
-                    <RiDeleteBin6Line size={20} />{" "}
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <RiDeleteBin6Line
+                          className="text-red-500 cursor-pointer"
+                          size={20}
+                        />
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete this expense and remove your data from our
+                            servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteExpense(expense?._id)}
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          <Pagination className="mt-5">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#" isActive>
+                  2
+                </PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">3</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="#" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
     </div>
@@ -374,3 +479,9 @@ const Expenses = () => {
 };
 
 export default Expenses;
+
+/*
+saving money for this month
+total expense for this month + total item
+Saving goals
+*/

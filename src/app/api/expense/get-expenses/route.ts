@@ -22,7 +22,7 @@ export async function GET(req: Request) {
     const ownerId = new mongoose.Types.ObjectId(_user._id);
 
     // Check if user exists and is verified
-    const user = await UserModel.findById({ _id: ownerId });
+    const user = await UserModel.findById(ownerId);
     if (!user?.isVerified) {
       return new Response(
         JSON.stringify({
@@ -33,10 +33,39 @@ export async function GET(req: Request) {
       );
     }
 
+    const url = new URL(req.url);
+    const searchParams = new URLSearchParams(url.search);
+    
+    // Get query parameters
+    const timeFilter = searchParams.get("time");
+    const searchCategory = searchParams.get("search");
+
+    // Set date range based on time filter
+    let dateFilter: { [key: string]: any } = {};
+    const now = new Date();
+    
+    if (timeFilter === "last 7 days") {
+      dateFilter = { date: { $gte: new Date(now.setDate(now.getDate() - 7)) } };
+    } else if (timeFilter === "last 30 days") {
+      dateFilter = { date: { $gte: new Date(now.setDate(now.getDate() - 30)) } };
+    } else if (timeFilter === "last month") {
+      const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+      dateFilter = { date: { $gte: lastMonthStart, $lte: lastMonthEnd } };
+    } else if (timeFilter === "last 6 months") {
+      dateFilter = { date: { $gte: new Date(now.setMonth(now.getMonth() - 6)) } };
+    } else if (timeFilter === "last year") {
+      dateFilter = { date: { $gte: new Date(now.setFullYear(now.getFullYear() - 1)) } };
+    }
+
+    // Build the query with date filter and optional category search
+    const query: { [key: string]: any } = { user: ownerId, ...dateFilter };
+    if (searchCategory) {
+      query.category = { $regex: new RegExp(searchCategory, "i") }; // Case-insensitive search
+    }
+
     // Query for the expenses of the current user, sorted by creation date (newest first)
-    const expenses = await ExpenseModel.find({ user: ownerId }).sort({
-      createdAt: -1,
-    });
+    const expenses = await ExpenseModel.find(query).sort({ createdAt: -1 });
 
     if (!expenses || expenses.length === 0) {
       return new Response(
