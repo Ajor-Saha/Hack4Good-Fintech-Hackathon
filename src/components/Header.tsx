@@ -33,7 +33,6 @@ import { Input } from "./ui/input";
 const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
-  
 
   const handleSignOut = async () => {
     await signOut({
@@ -42,12 +41,10 @@ const Header = () => {
     });
   };
 
-  
-
   return (
     <div>
       {/* Header */}
-      <header className="flex items-center justify-between bg-slate-50 p-4 border-b border-gray-300">
+      <header className="flex items-center justify-between bg-slate-50 dark:bg-gray-900 p-4 border-b border-gray-300">
         {/* Left side: Logo and name */}
         <Link href="/" className="flex items-center space-x-3">
           <Image
@@ -57,7 +54,7 @@ const Header = () => {
             alt="Horizon logo"
             className="h-8 w-8"
           />
-          <h1 className="text-gray-600 text-xl font-semibold">Horizon</h1>
+          <h1 className="text-gray-600 dark:text-gray-200 text-xl font-semibold">Horizon</h1>
         </Link>
 
         {/* Hamburger menu for small screens */}
@@ -78,13 +75,13 @@ const Header = () => {
                 </div>
                 <div className="grid gap-2 text-sm">
                   <div className="pt-1 pb-5 border-b border-slate-400">
-                    Budget limit of food has been reached 
+                    Budget limit of food has been reached
                   </div>
                   <div className="pt-1 pb-5 border-b border-slate-400">
-                    Budget limit of food has reached 
+                    Budget limit of food has reached
                   </div>
                   <div className="pt-1 pb-5 border-b border-slate-400">
-                    Budget limit of food has reached 
+                    Budget limit of food has reached
                   </div>
                 </div>
               </div>
@@ -110,18 +107,6 @@ const Header = () => {
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <CreditCard className="mr-2 h-4 w-4" />
-                  <span>Billing</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Keyboard className="mr-2 h-4 w-4" />
-                  <span>Keyboard shortcuts</span>
-                </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleSignOut}>
@@ -141,7 +126,7 @@ const Header = () => {
                 />
               </button>
             </SheetTrigger>
-            <SheetContent className="p-4 bg-slate-100 text-gray-800">
+            <SheetContent className="p-4 dark:text-gray-100 bg-slate-100 dark:bg-gray-900 text-gray-800">
               <SheetHeader>
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
@@ -158,9 +143,9 @@ const Header = () => {
                       className={cn(
                         "flex items-center p-3 rounded-lg space-x-4 transition-all duration-200",
                         {
-                          "bg-gradient-to-r from-slate-100 to-slate-300":
+                          "bg-gradient-to-r from-slate-100 to-slate-300 dark:from-slate-600 dark:to-slate-800":
                             isActive,
-                          "hover:bg-slate-300": !isActive,
+                          "hover:bg-slate-300 dark:hover:bg-slate-700": !isActive,
                         }
                       )}
                     >
@@ -176,8 +161,8 @@ const Header = () => {
                       </div>
                       <p
                         className={cn("text-sm font-medium", {
-                          "text-gray-700": isActive,
-                          "text-gray-800": !isActive,
+                          "text-gray-700 dark:text-gray-100": isActive,
+                          "text-gray-800 dark:text-gray-300": !isActive,
                         })}
                       >
                         {item.label}

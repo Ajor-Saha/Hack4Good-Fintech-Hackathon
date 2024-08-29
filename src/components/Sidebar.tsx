@@ -15,7 +15,7 @@ const Sidebar = () => {
   
 
   return (
-    <aside className="hidden h-full lg:block bg-slate-50 border-x border-gray-300 p-4 w-64">
+    <aside className="hidden h-full lg:block bg-slate-50 dark:bg-gray-900 border-x border-gray-300 p-4 w-64">
       <nav className="space-y-4">
         {sidebarLinks.map((item) => {
           const isActive =
@@ -28,8 +28,8 @@ const Sidebar = () => {
               className={cn(
                 "flex items-center p-3 rounded-lg space-x-4 transition-all duration-200",
                 {
-                  "bg-gradient-to-r from-slate-100 to-slate-300": isActive,
-                  "hover:bg-slate-300": !isActive,
+                  "bg-gradient-to-r from-slate-100 to-slate-300 dark:from-slate-600 dark:to-slate-800": isActive,
+                  "hover:bg-slate-300 dark:hover:bg-slate-700": !isActive,
                 }
               )}
             >
@@ -46,8 +46,8 @@ const Sidebar = () => {
               </div>
               <p
                 className={cn("text-sm font-medium", {
-                  "text-gray-700": isActive,
-                  "text-gray-800": !isActive,
+                  "text-gray-700 dark:text-gray-100": isActive,
+                  "text-gray-800 dark:text-gray-300": !isActive,
                 })}
               >
                 {item.label}

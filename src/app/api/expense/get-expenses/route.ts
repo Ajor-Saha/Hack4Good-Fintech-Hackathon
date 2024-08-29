@@ -40,6 +40,9 @@ export async function GET(req: Request) {
     const timeFilter = searchParams.get("time");
     const searchCategory = searchParams.get("search");
 
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "5");
+
     // Set date range based on time filter
     let dateFilter: { [key: string]: any } = {};
     const now = new Date();
@@ -65,7 +68,13 @@ export async function GET(req: Request) {
     }
 
     // Query for the expenses of the current user, sorted by creation date (newest first)
-    const expenses = await ExpenseModel.find(query).sort({ createdAt: -1 });
+    const expenses = await ExpenseModel.find(query)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+    const totalExpenses = await ExpenseModel.countDocuments(query);
+    const totalPages = Math.ceil(totalExpenses / limit);
 
     if (!expenses || expenses.length === 0) {
       return new Response(
@@ -82,6 +91,11 @@ export async function GET(req: Request) {
         success: true,
         message: "Expenses fetched successfully",
         data: expenses,
+        pagination: {
+          currentPage: page,
+          totalPages: totalPages,
+          totalExpenses: totalExpenses,
+        },
       }),
       { status: 200 }
     );

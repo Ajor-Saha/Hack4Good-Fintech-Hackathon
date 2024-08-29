@@ -2,14 +2,16 @@
 
 import CustomBarChart from "@/components/chart/CustomBarChart";
 import CustomLineChart from "@/components/chart/CustomLineChart";
+import CustomPieChart from "@/components/chart/CustomPieChart";
 import CustomCard from "@/components/CustomCard";
+import LatestBudgetTable from "@/components/LatestBudgetTable";
+import LatestExpenseTable from "@/components/LatestExpenseTable";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Dialog,
@@ -23,6 +25,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { ApiResponse } from "@/types/ApiResponse";
 import axios, { AxiosError } from "axios";
@@ -117,7 +128,6 @@ const Home = () => {
     }
   };
 
-
   const handleResetGoal = async () => {
     setLoadingReset(true);
 
@@ -143,35 +153,32 @@ const Home = () => {
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       let errorMessage =
-        axiosError.response?.data.message ??
-        "Error while reset saveGoal data";
+        axiosError.response?.data.message ?? "Error while reset saveGoal data";
     } finally {
       setLoadingReset(false);
     }
   };
 
-
-
   return (
     <div className="ml-5 pb-10">
-      <h1 className="text-2xl font-bold p-5 text-green-900">
+      <h1 className="text-2xl font-bold p-5 text-green-900 dark:text-green-500">
         Hello, {user?.username}
       </h1>
       <div className="grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3  justify-items-center">
         <CustomCard
           title="Expenses"
           amount={dashboardData.totalExpenses}
-          description="Expenses incurred this month"
+          description="Expenses incurred"
         />
         <CustomCard
           title="Items"
           amount={dashboardData.totalItems}
-          description="Total items this month"
+          description="Total items"
         />
         <CustomCard
           title="Savings"
           amount={dashboardData.savings}
-          description="Savings for this month"
+          description="Savings for"
         />
 
         <Card className="w-[250px] flex flex-col justify-between h-[180px] mx-auto mb-5">
@@ -179,16 +186,19 @@ const Home = () => {
             <CardDescription>Vacation or an Emergency fund.</CardDescription>
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="outline" className="text-gray-500  font-bold text-lg">
+                <Button
+                  variant="outline"
+                  className="text-gray-500  font-bold text-lg"
+                >
                   {goalAmount > 0 ? "Edit Goals" : "Create Goals"}
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  
                   <DialogTitle>Saving Goals</DialogTitle>
                   <DialogDescription>
-                    Set or update your saving goal. By clicking <b>reseting</b> button  new goal created with current date
+                    Set or update your saving goal. By clicking <b>reseting</b>{" "}
+                    button new goal created with current date
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -207,7 +217,11 @@ const Home = () => {
                   </div>
                 </div>
                 <DialogFooter>
-                  {goalAmount > 0 ? <Button onClick={handleResetGoal}>Reset</Button> : ""}
+                  {goalAmount > 0 ? (
+                    <Button onClick={handleResetGoal}>Reset</Button>
+                  ) : (
+                    ""
+                  )}
                   <Button
                     type="submit"
                     onClick={handleSaveGoal}
@@ -228,13 +242,72 @@ const Home = () => {
           </CardContent>
         </Card>
       </div>
-      <div className="mt-10 gap-5 border-gray-400 xl:w-[1130px] flex flex-col lg:flex-row justify-between">
-        <Card className="px-10 py-5">
-          <CustomLineChart />
-        </Card>
-        <Card className="px-10 py-5 mt-5 lg:mt-0">
-          <CustomBarChart />
-        </Card>
+      <div className="xl:w-[1130px] gap-5 w-full flex flex-col xl:flex-row justify-between pr-2 xl:pr-2">
+        <div className="xl:w-1/2  w-full px-10 py-5 mt-10 border border-gray-600">
+          <div className="flex justify-between">
+            <div className="pb-2">
+              <h2>Total Transaction</h2>
+              <span>$1023</span>
+            </div>
+            <Select>
+              <SelectTrigger className="w-[150px] lg:w-[140px]">
+                <SelectValue placeholder="Select a Time" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Time Range</SelectLabel>
+                  <SelectItem value="last 7 days">Last 7 days</SelectItem>
+                  <SelectItem value="last 30 days">Last 30 days</SelectItem>
+                  <SelectItem value="last month">Last month</SelectItem>
+                  <SelectItem value="last 6 months">Last 6 months</SelectItem>
+                  <SelectItem value="last year">Last year</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <CustomLineChart />
+          </div>
+        </div>
+        <div className="xl:w-1/2 w-full px-10 py-5 mt-10 border border-gray-600">
+          <div className="flex justify-between">
+            <div className="pb-2">
+              <h2>Total Transaction</h2>
+              <span>$1023</span>
+            </div>
+            <Select>
+              <SelectTrigger className="w-[150px] lg:w-[140px]">
+                <SelectValue placeholder="Select a Time" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Time Range</SelectLabel>
+                  <SelectItem value="last 7 days">Last 7 days</SelectItem>
+                  <SelectItem value="last 30 days">Last 30 days</SelectItem>
+                  <SelectItem value="last month">Last month</SelectItem>
+                  <SelectItem value="last 6 months">Last 6 months</SelectItem>
+                  <SelectItem value="last year">Last year</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <CustomBarChart />
+          </div>
+        </div>
+      </div>
+      <div className="xl:w-[1130px] gap-5 w-full flex flex-col xl:flex-row justify-between pr-2 xl:pr-2 mt-8">
+        <div className="border border-gray-600 xl:w-1/2 w-full">
+          <CustomPieChart />
+        </div>
+        <div className="border border-gray-600 xl:w-1/2 w-full">
+          <LatestBudgetTable />
+        </div>
+      </div>
+      <div className="xl:w-[1130px] gap-5 w-full flex flex-col xl:flex-row justify-between pr-2 xl:pr-2 mt-8">
+        <div className="xl:w-1/2 w-full border border-gray-600">
+          <LatestExpenseTable />
+        </div>
       </div>
     </div>
   );

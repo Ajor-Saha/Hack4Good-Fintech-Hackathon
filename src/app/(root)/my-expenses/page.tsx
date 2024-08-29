@@ -71,6 +71,8 @@ const Expenses = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [date, setDate] = useState<Date>();
   const [budgetCategories, setBudgetCategories] = useState<any>({});
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   const { data: session } = useSession();
   const [expenses, setExpenses] = useState<any[]>([]); // State to store threads
@@ -105,19 +107,20 @@ const Expenses = () => {
     }
   }, []);
 
-  
-
   const fetchUserExpenses = useCallback(async () => {
     try {
       const response = await axios.get<any>("/api/expense/get-expenses", {
         params: {
           time: timeFilter,
           search: searchCategory,
+          page: currentPage,
+          limit: 5,
         },
       });
 
       if (response.data.success) {
         setExpenses(response.data.data);
+        setTotalPages(response.data.pagination.totalPages);
       } else {
         console.log(response.data.message);
       }
@@ -127,7 +130,7 @@ const Expenses = () => {
         axiosError.response?.data.message ??
         "Error while fetching expenses details";
     }
-  }, [timeFilter, searchCategory]);
+  }, [timeFilter, searchCategory, currentPage]);
 
   useEffect(() => {
     if (session) {
@@ -448,30 +451,63 @@ const Expenses = () => {
               ))}
             </tbody>
           </table>
-          <Pagination className="mt-5">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  2
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          <div className="flex justify-between items-center px-4 py-3 sm:px-6">
+            <div className="flex-1 flex justify-between sm:hidden">
+              <Button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                className="bg-gray-500 text-white px-4 py-2 rounded-md"
+              >
+                Previous
+              </Button>
+              <Button
+                disabled={currentPage === totalPages}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                className="ml-3 bg-gray-500 text-white px-4 py-2 rounded-md"
+              >
+                Next
+              </Button>
+            </div>
+            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm text-gray-700">
+                  Showing page{" "}
+                  <span className="font-medium">{currentPage}</span> of{" "}
+                  <span className="font-medium">{totalPages}</span>
+                </p>
+              </div>
+              <div>
+                <nav
+                  className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                  aria-label="Pagination"
+                >
+                  <Button
+                    disabled={currentPage === 1}
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
+                    className="bg-gray-500 text-white px-4 py-2 rounded-l-md hover:bg-gray-600"
+                  >
+                    Previous
+                  </Button>
+                  <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                    Page {currentPage}
+                  </span>
+                  <Button
+                    disabled={currentPage === totalPages}
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
+                    className="bg-gray-500 text-white px-4 py-2 rounded-r-md hover:bg-gray-600"
+                  >
+                    Next
+                  </Button>
+                </nav>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -479,9 +515,3 @@ const Expenses = () => {
 };
 
 export default Expenses;
-
-/*
-saving money for this month
-total expense for this month + total item
-Saving goals
-*/

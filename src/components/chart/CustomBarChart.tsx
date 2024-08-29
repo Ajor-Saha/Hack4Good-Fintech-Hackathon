@@ -1,18 +1,23 @@
-import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { chartdata } from '@/constants';
+"use client";
+
+import React, { useState, useEffect } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import { chartdata } from "@/constants";
 
 const CustomBarChart = () => {
-  // Handle cases where chartdata might be undefined or null
-  if (!chartdata || chartdata.length === 0) {
-    return <p>No data available to display the chart.</p>;
-  }
-
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" minHeight={300}>
       <BarChart
         data={chartdata}
-        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
@@ -24,6 +29,6 @@ const CustomBarChart = () => {
       </BarChart>
     </ResponsiveContainer>
   );
-}
+};
 
 export default CustomBarChart;
