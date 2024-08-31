@@ -35,7 +35,7 @@ export async function GET(req: Request) {
       }
   
       
-  
+ 
       // Query for the budget of the current user for the current month and year
       const budget = await BudgetModel.findOne({ user: ownerId });
   

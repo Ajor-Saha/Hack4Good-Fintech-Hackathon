@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { signInSchema } from "@/schemas/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -198,19 +199,19 @@ function SignInForm() {
                 </div>
               </div>
             </div>
-            <button
+            <Button
               type="submit"
-              className="w-full bg-blue-500 text-white rounded py-3 text-sm font-semibold tracking-wider border-none outline-none hover:bg-blue-600 mt-5"
+              className="w-full bg-blue-500 text-white rounded mt-5 text-sm font-semibold tracking-wider border-none outline-none hover:bg-blue-600"
             >
               {loading ? (
                 <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin mx-auto" />
+                  <Loader2 className="mr-2 animate-spin" />
                   Please wait
                 </>
               ) : (
                 "Sign In"
               )}
-            </button>
+            </Button>
             <p className="text-sm mt-6 text-center">
               Don&apos;t have an account?
               <Link

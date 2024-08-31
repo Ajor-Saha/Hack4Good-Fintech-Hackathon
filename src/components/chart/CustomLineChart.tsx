@@ -1,3 +1,8 @@
+'use client'
+
+import { ApiResponse } from '@/types/ApiResponse';
+import axios, { AxiosError } from 'axios';
+import React, { useCallback, useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const data = [
@@ -45,26 +50,44 @@ const data = [
   },
 ];
 
+interface LineChartProps {
+  range : string
+}
 
+const CustomLineChart: React.FC<LineChartProps> = ({ range }) => {
+  const [chartData, setChartData] = useState([]);
 
-const CustomLineChart = () => {
+  const fetchLineChartData = useCallback(async () => {
+    try {
+      const response = await axios.get<any>(`/api/dashboard-data/lineChart-data?range=${range}`);
+      if (response.data.success) {
+        setChartData(response.data.data);
+      } else {
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>;
+      let errorMessage =
+        axiosError.response?.data.message ??
+        "Error while fetching user details";
+    }
+  }, [range]);
   
+  useEffect(() => {
+    fetchLineChartData()
+  }, [fetchLineChartData]);
 
   return (
     <ResponsiveContainer width="100%" minHeight={300}>
-        <LineChart
-          data={data}
-          
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-          <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-        </LineChart>
-      </ResponsiveContainer>
+      <LineChart data={chartData}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey="expenses" stroke="#8884d8" activeDot={{ r: 8 }} />
+      </LineChart>
+    </ResponsiveContainer>
   );
 }
 

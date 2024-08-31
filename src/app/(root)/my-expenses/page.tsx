@@ -44,15 +44,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiOutlineEdit } from "react-icons/ai";
 import {
@@ -278,9 +270,14 @@ const Expenses = () => {
                         <Calendar
                           mode="single"
                           selected={date}
-                          onSelect={(selectedDate: any) => {
-                            setDate(selectedDate);
-                            field.onChange(selectedDate?.toISOString());
+                          onSelect={(selectedDate) => {
+                            if (selectedDate) {
+                              const localDate = new Date(
+                                selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000
+                              );
+                              setDate(localDate);
+                              field.onChange(localDate.toISOString().split("T")[0]); // Send only the date part (YYYY-MM-DD)
+                            }
                           }}
                           initialFocus
                         />

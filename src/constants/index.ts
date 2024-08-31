@@ -1,4 +1,3 @@
-
 export const sidebarLinks = [
   {
     imgURL: "/icons/home.svg",
@@ -16,52 +15,36 @@ export const sidebarLinks = [
     label: "My Expenses",
   },
   {
+    imgURL: "/icons/customer-feedback.svg",
+    route: "/my-feedback",
+    label: "AI Feedback",
+  },
+  {
+    imgURL: "/icons/reinvestment.svg",
+    route: "/my-investment",
+    label: "My Investment",
+  },
+  {
     imgURL: "/icons/profile-user.svg",
     route: "/my-profile",
     label: "My Profile",
   },
 ];
 
-
-
-export const budgetCategory = [
-  {
-    title: "Food",
-    amount: 200,
-    item: 5,
-    spent: 10,
-    limit: 200
-  },
-  {
-    title: "Education",
-    amount: 200,
-    item: 5,
-    spent: 10,
-    limit: 200
-  },
-  {
-    title: "Utilities",
-    amount: 200,
-    item: 5,
-    spent: 10,
-    limit: 200
-  },
-  {
-    title: "Medicine",
-    amount: 200,
-    item: 5,
-    spent: 10,
-    limit: 200
-  },
-  {
-    title: "Clothes",
-    amount: 200,
-    item: 5,
-    spent: 10,
-    limit: 200
-  },
-]
-
+export const months: string[] = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 export const expenses = [
   {
@@ -89,96 +72,428 @@ export const expenses = [
     category: "food",
     amount: 200,
   },
-]
-
-
-
-export const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-]
+];
 
 export const chartdata = [
   {
-    name: 'Page A',
+    name: "Page A",
     uv: 4000,
     pv: 2400,
     amt: 2400,
   },
   {
-    name: 'Page B',
+    name: "Page B",
     uv: 3000,
     pv: 1398,
     amt: 2210,
   },
   {
-    name: 'Page C',
+    name: "Page C",
     uv: 2000,
     pv: 9800,
     amt: 2290,
   },
   {
-    name: 'Page D',
+    name: "Page D",
     uv: 2780,
     pv: 3908,
     amt: 2000,
   },
   {
-    name: 'Page E',
+    name: "Page E",
     uv: 1890,
     pv: 4800,
     amt: 2181,
   },
   {
-    name: 'Page F',
+    name: "Page F",
     uv: 2390,
     pv: 3800,
     amt: 2500,
   },
   {
-    name: 'Page G',
+    name: "Page G",
     uv: 3490,
     pv: 4300,
     amt: 2100,
   },
 ];
+
+export const stockData = {
+  topGainers: [
+    {
+      ticker: "CEADW",
+      price: "0.014",
+      volume: "4511",
+      details: {
+        Symbol: "CEADW",
+        AssetType: "Common Stock",
+        Name: "CEA Industries Inc. Warrant",
+        Currency: "USD",
+        Country: "USA",
+        Sector: "LIFE SCIENCES",
+        Industry: "AGRICULTURAL SERVICES",
+        Address: "1780 55TH STREET, SUITE C, BOULDER, CO, US",
+        OfficialSite: "https://www.ceaindustries.com",
+      },
+    },
+    {
+      ticker: "BNRG",
+      price: "1.55",
+      volume: "235766567",
+      details: {
+        Symbol: "BNRG",
+        AssetType: "Common Stock",
+        Name: "Brenmiller Energy Ltd Ordinary Shares",
+        Currency: "USD",
+        Country: "USA",
+        Sector: "MANUFACTURING",
+        Industry: "HEATING EQUIPMENT, EXCEPT ELECTRIC & WARM AIR FURNACES",
+        Address: "13 AMAL STREET, ROSH HAAYIN, ISRAEL",
+        OfficialSite: "https://www.bren-energy.com",
+      },
+    },
+    {
+      ticker: "ACABW",
+      price: "0.0495",
+      volume: "66670",
+      details: {},
+    },
+    {
+      ticker: "CYTHW",
+      price: "0.115",
+      volume: "651",
+      details: {
+        Symbol: "CYTHW",
+        AssetType: "Common Stock",
+        Name: "Cyclo Therapeutics Inc",
+        Currency: "USD",
+        Country: "USA",
+        Sector: "LIFE SCIENCES",
+        Industry: "INDUSTRIAL ORGANIC CHEMICALS",
+        Address: "27317 NW 78 AVENUE, N/A, HIGH SPRINGS, FL, US",
+        OfficialSite: "https://cyclotherapeutics.com",
+      },
+    },
+    {
+      ticker: "HYZNW",
+      price: "0.025",
+      volume: "22281",
+      details: {},
+    },
+    {
+      ticker: "LGL+",
+      price: "0.3499",
+      volume: "34821",
+      details: {},
+    },
+    {
+      ticker: "HNRA+",
+      price: "0.0793",
+      volume: "149233",
+      details: {},
+    },
+    {
+      ticker: "XBPEW",
+      price: "0.0358",
+      volume: "3930",
+      details: {
+        Symbol: "XBPEW",
+        AssetType: "Common Stock",
+        Name: "XBP Europe Holdings Inc",
+        Currency: "USD",
+        Country: "USA",
+        Sector: "REAL ESTATE & CONSTRUCTION",
+        Industry: "BLANK CHECKS",
+        Address: "110 EAST 59TH STREET, NEW YORK, NY, US",
+        OfficialSite: "https://www.xbpeurope.com",
+      },
+    },
+    {
+      ticker: "ZCARW",
+      price: "0.0233",
+      volume: "5967",
+      details: {
+        Symbol: "ZCARW",
+        AssetType: "Common Stock",
+        Name: "Zoomcar Holdings Inc",
+        Currency: "USD",
+        Country: "USA",
+        Sector: "REAL ESTATE & CONSTRUCTION",
+        Industry: "BLANK CHECKS",
+        Address: "24681 LA PLAZA #300, DANA POINT, CA, US",
+        OfficialSite: "https://www.zoomcar.com",
+      },
+    },
+    {
+      ticker: "RSVRW",
+      price: "1.34",
+      volume: "19830",
+      details: {
+        Symbol: "RSVRW",
+        AssetType: "Common Stock",
+        Name: "Reservoir Media Management Inc",
+        Currency: "USD",
+        Country: "USA",
+        Sector: "TRADE & SERVICES",
+        Industry: "SERVICES-AMUSEMENT & RECREATION SERVICES",
+        Address: "75 VARICK STREET, 9TH FLOOR, NEW YORK, NY, US",
+        OfficialSite: "https://www.reservoir-media.com",
+      },
+    },
+    {
+      ticker: "AENTW",
+      price: "0.0418",
+      volume: "53932",
+      details: {},
+    },
+    {
+      ticker: "LSBPW",
+      price: "0.0689",
+      volume: "4300",
+      details: {},
+    },
+    {
+      ticker: "CURIW",
+      price: "0.028",
+      volume: "74797",
+      details: {},
+    },
+    {
+      ticker: "MCAGR",
+      price: "0.1003",
+      volume: "97884",
+      details: {
+        Symbol: "MCAGR",
+        AssetType: "Common Stock",
+        Name: "Mountain Crest Acquisition Corp. V Right",
+        Currency: "USD",
+        Country: "USA",
+        Sector: "REAL ESTATE & CONSTRUCTION",
+        Industry: "BLANK CHECKS",
+        Address: "311 WEST 43RD STREET, 12TH FLOOR, NEW YORK, NY, US",
+        OfficialSite: "https://www.mcacquisition.com/Mountain-Crest-V-/de",
+      },
+    },
+    {
+      ticker: "ATPC",
+      price: "2.55",
+      volume: "79522256",
+      details: {
+        Symbol: "ATPC",
+        AssetType: "Common Stock",
+        Name: "Agape ATP Corporation Common Stock",
+        Currency: "USD",
+        Country: "USA",
+        Sector: "LIFE SCIENCES",
+        Industry: "SERVICES-HEALTH SERVICES",
+        Address:
+          "NO. 17, 17-1, 17-2, 17-3, WISMA LAXTON,, JALAN DESA, TAMAN DESA, OFF JALAN KLANG, KUALA LUMPUR, MY",
+        OfficialSite: "https://www.agapeatpgroup.com",
+      },
+    },
+    {
+      ticker: "ETWO+",
+      price: "0.19",
+      volume: "26124",
+      details: {},
+    },
+    {
+      ticker: "NUKKW",
+      price: "0.0173",
+      volume: "9929",
+      details: {},
+    },
+    {
+      ticker: "CINGW",
+      price: "0.0788",
+      volume: "137218",
+      details: {},
+    },
+    {
+      ticker: "GCTS+",
+      price: "0.18",
+      volume: "949",
+      details: {},
+    },
+    {
+      ticker: "MMVWW",
+      price: "0.0471",
+      volume: "1392",
+      details: {},
+    },
+  ],
+  topLosers: [
+    {
+      ticker: "NNAGR",
+      price: "0.0701",
+      volume: "413108",
+      details: {
+        Symbol: "NNAGR",
+        AssetType: "Common Stock",
+        Name: "99 Acquisition Group Inc. Right",
+        Currency: "USD",
+        Country: "USA",
+        Sector: "REAL ESTATE & CONSTRUCTION",
+        Industry: "BLANK CHECKS",
+        Address: "14 NOBLEWOOD CT, GAITHERSBURG, MD, MD",
+        OfficialSite: "https://99acquisitiongroup.com",
+      },
+    },
+    {
+      ticker: "VTAK",
+      price: "0.59",
+      volume: "2700614",
+      details: {
+        Symbol: "VTAK",
+        AssetType: "Common Stock",
+        Name: "Catheter Precision Inc.",
+        Currency: "USD",
+        Country: "USA",
+        Sector: "LIFE SCIENCES",
+        Industry: "SURGICAL & MEDICAL INSTRUMENTS & APPARATUS",
+        Address: "2070 LAS PALMAS DRIVE, CARLSBAD, CA, US",
+        OfficialSite: "https://www.catheterprecision.com",
+      },
+    },
+    {
+      ticker: "NCNA",
+      price: "3.66",
+      volume: "437346",
+      details: {},
+    },
+    {
+      ticker: "LUCYW",
+      price: "0.05",
+      volume: "77433",
+      details: {},
+    },
+    {
+      ticker: "INAQW",
+      price: "0.0262",
+      volume: "4681",
+      details: {},
+    },
+    {
+      ticker: "BAERW",
+      price: "0.0373",
+      volume: "219487",
+      details: {},
+    },
+    {
+      ticker: "STG",
+      price: "4.25",
+      volume: "65394",
+      details: {},
+    },
+    {
+      ticker: "PALT",
+      price: "3.21",
+      volume: "1554963",
+      details: {},
+    },
+    {
+      ticker: "GOVXW",
+      price: "0.2005",
+      volume: "29313",
+      details: {},
+    },
+    {
+      ticker: "AILEW",
+      price: "0.11",
+      volume: "193260",
+      details: {},
+    },
+    {
+      ticker: "OUST+A",
+      price: "0.0203",
+      volume: "900",
+      details: {},
+    },
+    {
+      ticker: "CELUW",
+      price: "0.012",
+      volume: "1",
+      details: {},
+    },
+    {
+      ticker: "PBMWW",
+      price: "0.0186",
+      volume: "2325",
+      details: {},
+    },
+    {
+      ticker: "ONFOW",
+      price: "0.1215",
+      volume: "10497",
+      details: {
+        Symbol: "ONFOW",
+        AssetType: "Common Stock",
+        Name: "Onfolio Holdings Inc. Warrant",
+        Currency: "USD",
+        Country: "USA",
+        Sector: "TECHNOLOGY",
+        Industry: "SERVICES-COMPUTER PROCESSING & DATA PREPARATION",
+        Address: "1007 NORTH ORANGE STREET 4TH FLOOR, WILMINGTON, DE, US",
+        OfficialSite: "https://www.onfolio.com",
+      },
+    },
+    {
+      ticker: "TVGNW",
+      price: "0.016",
+      volume: "26774",
+      details: {},
+    },
+    {
+      ticker: "IFIN",
+      price: "6.59",
+      volume: "49776",
+      details: {
+        Symbol: "IFIN",
+        AssetType: "Common Stock",
+        Name: "InFintT Acquisition Corp",
+        Currency: "USD",
+        Country: "USA",
+        Sector: "TRADE & SERVICES",
+        Industry: "SERVICES-BUSINESS SERVICES, NEC",
+        Address: "32 BROADWAY, SUITE 401, NEW YORK, NY, US",
+        OfficialSite: "https://www.infintspac.com",
+      },
+    },
+    {
+      ticker: "VRMEW",
+      price: "0.041",
+      volume: "202",
+      details: {},
+    },
+    {
+      ticker: "LFLYW",
+      price: "0.0157",
+      volume: "23751",
+      details: {},
+    },
+    {
+      ticker: "HWH",
+      price: "0.54",
+      volume: "254400",
+      details: {},
+    },
+    {
+      ticker: "SNAXW",
+      price: "0.0068",
+      volume: "8203",
+      details: {
+        Symbol: "SNAXW",
+        AssetType: "Common Stock",
+        Name: "Stryve Foods Inc",
+        Currency: "USD",
+        Country: "USA",
+        Sector: "REAL ESTATE & CONSTRUCTION",
+        Industry: "BLANK CHECKS",
+        Address: "250 WEST 57TH STREET, SUITE 2223, NEW YORK, NY, US",
+        OfficialSite: "https://stryve.com",
+      },
+    },
+  ],
+  mostActive: [],
+};

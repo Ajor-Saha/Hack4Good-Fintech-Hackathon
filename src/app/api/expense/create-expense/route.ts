@@ -6,6 +6,7 @@ import UserModel from "@/model/User";
 import ExpenseModel from "@/model/Expense";
 import BudgetModel from "@/model/Budget";
 
+
 export async function POST(req: Request) {
   await dbConnect();
 

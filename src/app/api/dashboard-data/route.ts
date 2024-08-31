@@ -5,11 +5,7 @@ import UserModel from "@/model/User";
 import { authOptions } from "../auth/[...nextauth]/options";
 import ExpenseModel from "@/model/Expense";
 
-/*
-saving money for this month
-total expense for this month + total item
-Saving goals
-*/
+
 
 export async function GET(req: Request) {
   await dbConnect();

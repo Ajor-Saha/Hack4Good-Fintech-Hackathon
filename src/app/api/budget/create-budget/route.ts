@@ -72,7 +72,7 @@ export async function POST(req: Request) {
       }
 
       // Add new category to existing budget
-      budget.categories.push({ name, limit, spent: 0 });
+      budget.categories.unshift({ name, limit, spent: 0 });
     } else {
       // Create a new budget
       budget = new BudgetModel({
