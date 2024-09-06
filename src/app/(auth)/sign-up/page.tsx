@@ -24,7 +24,6 @@ function SignUpForm() {
       username: "",
       email: "",
       password: "",
-      currency: "USD",
     },
   });
 
@@ -54,7 +53,7 @@ function SignUpForm() {
   };
 
   return (
-    <div className="font-[sans-serif]   flex flex-col justify-center  items-center  px-5">
+    <div className="font-[sans-serif] pb-16 flex flex-col justify-center  items-center  px-5">
       <div className="flex items-center space-x-3 py-10">
         <Image
           src="/icons/logo.svg"
@@ -65,7 +64,7 @@ function SignUpForm() {
         />
         <h1 className="text-gray-600 text-xl font-semibold">Horizon</h1>
       </div>
-      <div className="w-full max-w-4xl mx-auto">
+      <div className="w-full max-w-4xl mx-auto lg:border dark:lg:border-gray-800 rounded-md">
         <div className="grid md:grid-cols-2 lg:gap-24 gap-16 w-full sm:p-8 p-6 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded overflow-hidden">
           <div className="max-md:order-1 space-y-6">
             <div className="md:mb-16 mb-8">
@@ -124,7 +123,7 @@ function SignUpForm() {
                     type="text"
                     {...form.register("fullName")}
                     required
-                    className="bg-white border border-gray-300 w-full text-sm pl-4 pr-10 py-2.5 rounded outline-blue-500"
+                    className="bg-white dark:text-gray-700 border border-gray-300 w-full text-sm pl-4 pr-10 py-2.5 rounded outline-blue-500"
                     placeholder="Enter full name"
                   />
                   <svg
@@ -146,7 +145,7 @@ function SignUpForm() {
                     type="text"
                     {...form.register("username")}
                     required
-                    className="bg-white border border-gray-300 w-full text-sm pl-4 pr-10 py-2.5 rounded outline-blue-500"
+                    className="bg-white dark:text-gray-700 border border-gray-300 w-full text-sm pl-4 pr-10 py-2.5 rounded outline-blue-500"
                     placeholder="Enter username"
                   />
                   <svg
@@ -173,7 +172,7 @@ function SignUpForm() {
                     type="email"
                     {...form.register("email")}
                     required
-                    className="bg-white border border-gray-300 w-full text-sm pl-4 pr-10 py-2.5 rounded outline-blue-500"
+                    className="bg-white dark:text-gray-700 border border-gray-300 w-full text-sm pl-4 pr-10 py-2.5 rounded outline-blue-500"
                     placeholder="Enter email"
                   />
                   <svg
@@ -208,37 +207,7 @@ function SignUpForm() {
                   </p>
                 )}
               </div>
-              <div>
-                <label className="text-sm mb-2 block">Currency</label>
-                <div className="relative flex items-center">
-                  <select
-                    required
-                    {...form.register("currency")}
-                    className="bg-white border border-gray-300 w-full text-sm pl-4 pr-10 py-2.5 rounded outline-blue-500 appearance-none"
-                    defaultValue="USD"
-                  >
-                    <option value="USD">USD - US Dollar</option>
-                    <option value="EUR">EUR - Euro</option>
-                    <option value="GBP">GBP - British Pound</option>
-                    <option value="JPY">JPY - Japanese Yen</option>
-                    <option value="BDT">BDT - Bangladeshi Taka</option>
-                  </select>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="#bbb"
-                    stroke="#bbb"
-                    className="w-4 h-4 absolute right-4 pointer-events-none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 15l-3.5-3.5a1 1 0 0 1 1.42-1.42L12 12.34l2.08-2.26a1 1 0 0 1 1.42 1.42L12 15z" />
-                  </svg>
-                </div>
-                {form.formState.errors.currency && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {form.formState.errors.currency.message}
-                  </p>
-                )}
-              </div>
+              
 
               <div>
                 <label className="text-sm mb-2 block">Password</label>
@@ -247,7 +216,7 @@ function SignUpForm() {
                     type="password"
                     {...form.register("password")}
                     required
-                    className="bg-white border border-gray-300 w-full text-sm pl-4 pr-10 py-2.5 rounded outline-blue-500"
+                    className="bg-white dark:text-gray-700 border border-gray-300 w-full text-sm pl-4 pr-10 py-2.5 rounded outline-blue-500"
                     placeholder="Enter password"
                   />
                   <svg
@@ -267,17 +236,7 @@ function SignUpForm() {
                 )}
               </div>
 
-              <div className="flex items-center justify-between">
-                <label className="flex items-center">
-                  <input type="checkbox" className="mr-2" /> Remember me
-                </label>
-                <Link
-                  href="/"
-                  className="text-blue-500 hover:underline text-sm"
-                >
-                  Forgot Password?
-                </Link>
-              </div>
+              
               <button
                 type="submit"
                 className="w-full bg-blue-500 text-white rounded py-3 text-sm font-semibold tracking-wider border-none outline-none hover:bg-blue-600 flex justify-center items-center"

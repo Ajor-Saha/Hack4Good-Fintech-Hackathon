@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { MdOutlineNotificationsActive } from "react-icons/md";
+import React, { useCallback, useEffect, useState } from "react";
+import { MdOutlineFeaturedPlayList, MdOutlineNotificationsActive } from "react-icons/md";
 import {
   Sheet,
   SheetContent,
@@ -23,16 +23,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { User, CreditCard, Settings, Keyboard, LogOut } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { User2, CreditCard, Settings, Keyboard, LogOut } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+import { User } from "next-auth";
+import { getCurrentUser } from "@/lib/getCurrentUser";
+import axios, { AxiosError } from "axios";
+import { ApiResponse } from "@/types/ApiResponse";
+import { useToast } from "./ui/use-toast";
 
 const Header = () => {
   const pathname = usePathname();
-  const router = useRouter();
+  const [userDetails, setUserDetails] = useState<any>({});
+  const [userNotifications, setUserNotifications] = useState<any>({});
+  const [userData, setUserData] = useState<any[]>([]);
+
+  const { toast } = useToast();
+  const { data: session } = useSession();
 
   const handleSignOut = async () => {
     await signOut({
@@ -40,6 +47,69 @@ const Header = () => {
       redirect: true,
     });
   };
+
+  const fetchUserDetails = useCallback(async () => {
+    try {
+      const response = await axios.get<ApiResponse>("/api/user");
+      if (response.data.success) {
+        setUserDetails(response.data.data);
+      } else {
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>;
+      let errorMessage =
+        axiosError.response?.data.message ??
+        "Error while fetching user details";
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
+
+  const fetchUserNotifications = useCallback(async () => {
+    try {
+      const response = await axios.get<ApiResponse>("/api/notifications");
+      if (response.data.success) {
+        setUserNotifications(response.data.data);
+      } else {
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>;
+      let errorMessage =
+        axiosError.response?.data.message ??
+        "Error while fetching user notifications";
+    }
+  }, []);
+
+  const fetchUserData = useCallback(async () => {
+    try {
+      const response = await axios.get<any>(
+        "/api/dashboard-data/user-features"
+      );
+      if (response.data.success) {
+        setUserData(response.data.data);
+      } else {
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>;
+      let errorMessage =
+        axiosError.response?.data.message ??
+        "Error while fetching user notifications";
+    }
+  }, []);
+
+  useEffect(() => {
+    if (session) {
+      fetchUserDetails();
+      fetchUserNotifications();
+      fetchUserData();
+    }
+  }, [session, fetchUserDetails, fetchUserNotifications, fetchUserData]);
 
   return (
     <div>
@@ -54,7 +124,9 @@ const Header = () => {
             alt="Horizon logo"
             className="h-8 w-8"
           />
-          <h1 className="text-gray-600 dark:text-gray-200 text-xl font-semibold">Horizon</h1>
+          <h1 className="text-gray-600 dark:text-gray-200 text-xl font-semibold">
+            Horizon
+          </h1>
         </Link>
 
         {/* Hamburger menu for small screens */}
@@ -74,15 +146,40 @@ const Header = () => {
                   </p>
                 </div>
                 <div className="grid gap-2 text-sm">
-                  <div className="pt-1 pb-5 border-b border-slate-400">
-                    Budget limit of food has been reached
-                  </div>
-                  <div className="pt-1 pb-5 border-b border-slate-400">
-                    Budget limit of food has reached
-                  </div>
-                  <div className="pt-1 pb-5 border-b border-slate-400">
-                    Budget limit of food has reached
-                  </div>
+                  {userNotifications?.categories?.length > 0 ? (
+                    userNotifications.categories.map((notifciation: any) => (
+                      <div
+                        key={notifciation?._id}
+                        className="pt-1 pb-4 border-b border-slate-400"
+                      >
+                        <p>Budget limit of {notifciation?.name} been reached</p>
+                        <div className="flex justify-between">
+                          <span>${notifciation?.spent} spent</span>
+                          <span className="pr-8">
+                            ${notifciation?.limit} budget
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="pt-1 pb-4 border-b border-slate-400">
+                      No notifications Available on budget
+                    </div>
+                  )}
+                  {userData.length > 0 &&
+                    userData.map((data, index) =>
+                      data.flag === false ? (
+                        <Link
+                          href={data?.route}
+                          key={index}
+                          className="pt-1 pb-4 border-b border-slate-400"
+                        >
+                          Add new {data.name} details
+                        </Link>
+                      ) : (
+                        ""
+                      )
+                    )}
                 </div>
               </div>
             </PopoverContent>
@@ -91,7 +188,7 @@ const Header = () => {
             <DropdownMenuTrigger asChild>
               <button className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500 shadow-lg">
                 <Image
-                  src="/ava1.webp" // replace with your image path
+                  src={userDetails?.avatar || "/ava1.webp"} // replace with your image path
                   alt="User Avatar"
                   width={64}
                   height={64}
@@ -104,8 +201,12 @@ const Header = () => {
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
+                  <User2 className="mr-2 h-4 w-4" />
+                  <Link className="cursor-pointer" href="/my-profile">Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <MdOutlineFeaturedPlayList className="mr-2 h-4 w-4" />
+                  <Link className="cursor-pointer" href="/my-feedback">AI Feedback</Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
@@ -145,7 +246,8 @@ const Header = () => {
                         {
                           "bg-gradient-to-r from-slate-100 to-slate-300 dark:from-slate-600 dark:to-slate-800":
                             isActive,
-                          "hover:bg-slate-300 dark:hover:bg-slate-700": !isActive,
+                          "hover:bg-slate-300 dark:hover:bg-slate-700":
+                            !isActive,
                         }
                       )}
                     >

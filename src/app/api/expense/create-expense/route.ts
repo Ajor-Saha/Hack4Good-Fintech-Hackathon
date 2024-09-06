@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import UserModel from "@/model/User";
 import ExpenseModel from "@/model/Expense";
 import BudgetModel from "@/model/Budget";
+import NotificationModel from "@/model/Notifications";
 
 
 export async function POST(req: Request) {
@@ -38,7 +39,6 @@ export async function POST(req: Request) {
     // Extract budget details from req.body
     const { description, amount, date, category } = await req.json();
 
-    console.log(date);
 
     // Validate the input (this can be expanded based on your requirements)
     if (!amount || !category) {
@@ -71,6 +71,22 @@ export async function POST(req: Request) {
 
       if (categoryIndex !== -1) {
         budget.categories[categoryIndex].spent += amount;
+
+        if (budget.categories[categoryIndex].spent >= budget.categories[categoryIndex].limit) {
+          // Create a notification if the limit is reached or exceeded
+          await NotificationModel.create({
+            user: ownerId,
+            categories: [
+              {
+                name: category,
+                limit: budget.categories[categoryIndex].limit,
+                spent: budget.categories[categoryIndex].spent,
+                date: new Date(),
+              },
+            ],
+          });
+        }
+
       } else {
         // If the category doesn't exist in the budget, you can either throw an error
         // or add a new category to the budget with the spent amount. Here's an example of adding:

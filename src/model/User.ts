@@ -56,7 +56,6 @@ const UserSchema: Schema<User> = new mongoose.Schema({
     },
     currency: {
       type: String,
-      required: true,
       enum: ["USD", "EUR", "GBP", "JPY", "BDT"],
       default: "USD", // Default currency
     },

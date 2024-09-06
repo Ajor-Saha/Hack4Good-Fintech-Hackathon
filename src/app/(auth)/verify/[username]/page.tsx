@@ -30,6 +30,7 @@ const VerifyAccount = () => {
   });
 
   const [otpValue, setOtpValue] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleOtpChange = (value: string) => {
     setOtpValue(value);
@@ -37,6 +38,7 @@ const VerifyAccount = () => {
   };
 
   const onSubmit = async (data: z.infer<typeof verifySchema>) => {
+    setLoading(true)
     try {
       const response = await axios.post<ApiResponse>(`/api/verify-code`, {
         username: params.username,
@@ -58,11 +60,13 @@ const VerifyAccount = () => {
           "An error occurred. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen">
+    <div className="flex dark:text-gray-700 flex-col justify-center items-center min-h-screen">
       <div className="flex items-center space-x-3 py-10">
         <Image
           src="/icons/logo.svg"
@@ -107,9 +111,9 @@ const VerifyAccount = () => {
               </p>
             )}
           </div>
-          <div className="text-right">
-            <Button type="submit" className="w-24">
-              Verify
+          <div className="text-right dark:text-gray-50">
+            <Button type="submit" disabled={loading} variant="outline" className="w-24">
+              {loading ? "verifying..." : "Verify"}
             </Button>
           </div>
         </form>

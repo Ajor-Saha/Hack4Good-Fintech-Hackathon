@@ -83,7 +83,7 @@ const CustomCard: React.FC<CustomCardProps> = ({
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Select Time</SelectLabel>
-              <SelectItem value="last 7 days">Last 7 days</SelectItem>
+              {title === "Savings" ? "" : <SelectItem value="last 7 days">Last 7 days</SelectItem>}
               <SelectItem value="last 30 days">Last 30 days</SelectItem>
               <SelectItem value="last month">Last month</SelectItem>
               <SelectItem value="last 6 months">Last 6 months</SelectItem>
@@ -97,6 +97,7 @@ const CustomCard: React.FC<CustomCardProps> = ({
 };
 
 export default CustomCard;
+
 
 /*
 Saving money for this moth

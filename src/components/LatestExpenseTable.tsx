@@ -4,9 +4,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
+import { useRouter } from "next/navigation";
 
 const LatestExpenseTable = () => {
   const [expenses, setExpenses] = useState<any[]>([]);
+  const router = useRouter();
 
   const fetchUserExpenses = useCallback(async () => {
     try {
@@ -46,11 +48,17 @@ const LatestExpenseTable = () => {
     return `${day}/${month}/${year}`;
   };
 
+  const handleSeeAll = (route:string) => {
+    router.push(route);
+  }
+
   return (
     <div className="flex flex-col p-5 bg-gray-50 dark:bg-gray-700">
       <div className="flex justify-between border-b border-gray-400">
-        <span className="text-sm mt-2 text-gray-300 font-bold">Recent Expenses</span>
-        <Button variant="outline" className="mb-2 dark:text-blue-600">
+        <span className="text-sm mt-2 text-gray-300 font-bold">
+          Recent Expenses
+        </span>
+        <Button variant="outline" onClick={() => handleSeeAll("/my-expenses")} className="mb-2 dark:text-blue-600">
           See All
         </Button>
       </div>
@@ -69,16 +77,24 @@ const LatestExpenseTable = () => {
           </tr>
         </thead>
         <tbody>
-          {expenses.map((expense, index) => (
-            <tr
-              key={index}
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-            >
-              <td className="px-6 py-4">{formatDate(expense.date)}</td>
-              <td className="px-6 py-4">{expense.category}</td>
-              <td className="px-6 py-4">${expense.amount}</td>
+          {expenses.length > 0 ? (
+            expenses.map((expense, index) => (
+              <tr
+                key={index}
+                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+              >
+                <td className="px-6 py-4">{formatDate(expense.date)}</td>
+                <td className="px-6 py-4">{expense.category}</td>
+                <td className="px-6 py-4">${expense.amount}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={3} className="px-6 py-4 text-center dark:text-gray-50">
+                No expense avaible. Add new Expense details
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

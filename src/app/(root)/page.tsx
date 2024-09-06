@@ -38,6 +38,7 @@ import { ApiResponse } from "@/types/ApiResponse";
 import axios, { AxiosError } from "axios";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 
 const Home = () => {
@@ -51,6 +52,7 @@ const Home = () => {
   const [loadingRest, setLoadingReset] = useState<boolean>(false);
   const [range, setRange] = useState<string>("last 30 days");
   const { toast } = useToast();
+  const router = useRouter();
 
   const fetchDashboardData = useCallback(async () => {
     try {
@@ -91,7 +93,7 @@ const Home = () => {
       if (response.data.success) {
         setBudgetCategories(response.data.data);
       } else {
-        toast({ description: response.data.message });
+        console.log(response.data.message);
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -177,6 +179,16 @@ const Home = () => {
     }
   };
 
+  const progressValue =
+    goalAmount > 0
+      ? ((saveData?.currentSave) / goalAmount) * 100
+      : 0;
+
+
+  const handleSeeAll = (route:string) => {
+    router.push(route);
+  }
+
   return (
     <div className="ml-5 pb-10">
       <h1 className="text-2xl font-bold p-5 text-green-900 dark:text-green-500">
@@ -256,7 +268,7 @@ const Home = () => {
               <span>${saveData?.currentSave || 0}</span>
               <span>${goalAmount || 0}</span>
             </div>
-            <Progress value={33} />
+            <Progress value={progressValue} />
           </CardContent>
         </Card>
       </div>
@@ -324,7 +336,7 @@ const Home = () => {
               <span className="text-sm mt-2 text-gray-300 font-bold">
                 Recent Budgets
               </span>
-              <Button variant="outline" className="mb-2 dark:text-blue-500">
+              <Button variant="outline" onClick={() => handleSeeAll("/my-budget")} className="mb-2 dark:text-blue-500">
                 See All
               </Button>
             </div>
@@ -343,18 +355,27 @@ const Home = () => {
                 </tr>
               </thead>
               <tbody>
-                {budgetCategories?.categories
-                  ?.slice(0, 4)
-                  .map((budget: any) => (
+                {budgetCategories?.categories?.length > 0 ? (
+                  budgetCategories.categories.slice(0, 4).map((budget: any) => (
                     <tr
                       key={budget._id}
                       className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                     >
                       <td className="px-6 py-4">{budget?.name}</td>
                       <td className="px-6 py-4">{budget?.spent}</td>
-                      <td className="px-6 py-4">${budget?.limit}</td>
+                      <td className="px-6 py-4">{budget?.limit}</td>
                     </tr>
-                  ))}
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={3}
+                      className="px-6 py-4 text-center dark:text-white"
+                    >
+                      No budget available for you. Create New budget category
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

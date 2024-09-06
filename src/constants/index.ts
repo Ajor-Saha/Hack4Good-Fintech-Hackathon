@@ -119,6 +119,42 @@ export const chartdata = [
   },
 ];
 
+
+export const featureData = [
+  {
+    "heading": "Monthly Budgeting",
+    "description": "Set monthly budgets, track spending in categories, and receive alerts when approaching limits.",
+    "imgURL": "/budget.jpg",
+  },
+  {
+    "heading": "Expense Tracking",
+    "description": "Input daily expenses, categorize them, and view detailed reports on spending patterns.",
+    "imgURL": "/expense.png",
+  },
+  {
+    "heading": "Investment Insights",
+    "description": "Add investment details, get stock-related news, and gain insights on market trends.",
+    "imgURL": "/investment.avif",
+  },
+  {
+    "heading": "Savings Goals",
+    "description": "Set specific savings goals and track progress towards achieving them.",
+    "imgURL": "/savegoal.jpeg",
+  },
+  {
+    "heading": "Financial Dashboard",
+    "description": "Access an overview of financial status, including cash flow, net worth, and recent transactions.",
+    "imgURL": "/dashboard.avif",
+  },
+  {
+    "heading": "AI-Powered Expense Optimization",
+    "description": "AI-driven insights to optimize expense allocation, helping users efficiently reach savings goals.",
+    "imgURL": "/aiexpense.jpg",
+  }
+  
+]
+
+
 export const stockData = {
   topGainers: [
     {

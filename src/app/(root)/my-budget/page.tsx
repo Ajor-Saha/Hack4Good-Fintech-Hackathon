@@ -3,16 +3,7 @@
 import BudgetCard from "@/components/BudgetCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { FiEdit3 } from "react-icons/fi";
 import {
   Dialog,
   DialogContent,
@@ -23,16 +14,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { budgetCategory, invoices } from "@/constants";
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -64,6 +45,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Label } from "@/components/ui/label";
 
 const CreateCard = ({ fetchUserBudgets }: { fetchUserBudgets: () => void }) => {
   const { toast } = useToast();
@@ -126,7 +108,7 @@ const CreateCard = ({ fetchUserBudgets }: { fetchUserBudgets: () => void }) => {
               height={30}
               className="w-12 h-8 mx-auto"
             />
-            <p className="text-lg font-bold">Create New Budget</p>
+            <span className="text-lg font-bold">Create New Budget</span>
           </CardContent>
         </Card>
       </DialogTrigger>
@@ -195,6 +177,8 @@ const MyBudget = () => {
   const [budgetCategories, setBudgetCategories] = useState<any>({});
   const { data: session } = useSession();
   const user: User = session?.user;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [newLimit, setNewLimit] = useState<number | null>(null);
   const { toast } = useToast();
 
   const fetchUserBudgets = useCallback(async () => {
@@ -231,7 +215,7 @@ const MyBudget = () => {
         toast({
           title: "Delete category",
           description: response.data.message,
-          variant: "default"
+          variant: "default",
         });
         fetchUserBudgets(); // Refresh the budget categories after deletion
       } else {
@@ -243,6 +227,44 @@ const MyBudget = () => {
       }
     } catch (error) {
       console.error("Error deleting category:", error);
+    }
+  };
+
+  const handleResetCategory = async (category: string) => {
+    setIsSubmitting(true);
+
+    try {
+      const response = await axios.put<ApiResponse>(
+        "/api/budget/reset-budget",
+        {
+          category,
+          limit: newLimit, // Pass the updated limit
+        }
+      );
+
+      toast({
+        title: response.data.success ? "Category Reset" : "Error",
+        description: response.data.message,
+        variant: response.data.success ? "default" : "destructive",
+      });
+
+      if (response.data.success) {
+        fetchUserBudgets(); // Refresh budget data
+      }
+
+      setIsSubmitting(false);
+    } catch (error) {
+      const axiosError = error as AxiosError<ApiResponse>;
+      let errorMessage =
+        axiosError.response?.data.message || "Error resetting category";
+
+      toast({
+        title: "Reset Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+
+      setIsSubmitting(false);
     }
   };
 
@@ -273,55 +295,134 @@ const MyBudget = () => {
                   Limit
                 </th>
                 <th scope="col" className="px-6 py-3">
+                  Edit
+                </th>
+                <th scope="col" className="px-6 py-3">
                   Delete
                 </th>
               </tr>
             </thead>
             <tbody>
-              {budgetCategories?.categories?.map((budget: any) => (
-                <tr
-                  key={budget._id}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <td className="px-6 py-4">{budget?.name}</td>
-                  <td className="px-6 py-4">{budget?.spent}</td>
-                  <td className="px-6 py-4">${budget?.limit}</td>
-                  
-                  <td className="px-6 py-4">
-                    {/* <RiDeleteBin6Line size={20} />{" "} */}
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <RiDeleteBin6Line
-                          className="text-red-500 cursor-pointer"
-                          size={20}
-                        />
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete this budget and remove your data from our
-                            servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() =>
-                              handleDeleteCategory(budgetCategories?._id, budget?.name)
-                            }
-                          >
-                            Delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+              {budgetCategories?.categories?.length > 0 ? (
+                budgetCategories?.categories?.map((budget: any) => (
+                  <tr
+                    key={budget._id}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  >
+                    <td className="px-6 py-4">{budget?.name}</td>
+                    <td className="px-6 py-4">{budget?.spent}</td>
+                    <td className="px-6 py-4">${budget?.limit}</td>
+                    <td className="px-6 py-4 text-blue-400">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <FiEdit3 className="cursor-pointer" size={20} />
+                        </DialogTrigger>
+                        <DialogContent className="w-full">
+                          <DialogHeader>
+                            <DialogTitle>Reset Budget Details</DialogTitle>
+                            <DialogDescription>
+                              By clicking the reset button this budget category
+                              reset and previous data deleted from our server
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            <div>
+                              <p>
+                                <b>Budget Category : </b>
+                                {budget?.name}
+                              </p>
+                              <p>
+                                <b>Budget Spent : </b>
+                                {budget?.spent}
+                              </p>
+                              <p>
+                                <b>Budget Limit : </b>
+                                {budget?.limit}
+                              </p>
+                            </div>
+                            <div className="w-full flex gap-5">
+                              <Label
+                                htmlFor="amount"
+                                className="text-right mt-3"
+                              >
+                                Budget Amount :
+                              </Label>
+                              <Input
+                                type="number"
+                                defaultValue={budget.limit}
+                                onChange={(e) =>
+                                  setNewLimit(Number(e.target.value))
+                                }
+                                className="w-1/2"
+                              />
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button
+                              onClick={() => handleResetCategory(budget.name)}
+                              disabled={isSubmitting}
+                            >
+                              {isSubmitting ? (
+                                <>
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  Resetting...
+                                </>
+                              ) : (
+                                "Reset Category"
+                              )}
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </td>
+                    <td className="px-6 py-4">
+                      {/* <RiDeleteBin6Line size={20} />{" "} */}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <RiDeleteBin6Line
+                            className="text-red-500 cursor-pointer"
+                            size={20}
+                          />
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you absolutely sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will
+                              permanently delete this budget and remove your
+                              data from our servers.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() =>
+                                handleDeleteCategory(
+                                  budgetCategories?._id,
+                                  budget?.name
+                                )
+                              }
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={3}
+                    className="px-10 py-10 text-center dark:text-gray-50"
+                  >
+                    No Budget Category available. Create new Budget category
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
@@ -331,4 +432,3 @@ const MyBudget = () => {
 };
 
 export default MyBudget;
-// UTQ6PICYKBKGOV1R

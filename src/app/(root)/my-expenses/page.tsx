@@ -46,7 +46,6 @@ import {
 } from "@/components/ui/form";
 
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { AiOutlineEdit } from "react-icons/ai";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -58,6 +57,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+
+
 
 const Expenses = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -273,10 +274,13 @@ const Expenses = () => {
                           onSelect={(selectedDate) => {
                             if (selectedDate) {
                               const localDate = new Date(
-                                selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000
+                                selectedDate.getTime() -
+                                  selectedDate.getTimezoneOffset() * 60000
                               );
                               setDate(localDate);
-                              field.onChange(localDate.toISOString().split("T")[0]); // Send only the date part (YYYY-MM-DD)
+                              field.onChange(
+                                localDate.toISOString().split("T")[0]
+                              ); // Send only the date part (YYYY-MM-DD)
                             }
                           }}
                           initialFocus
@@ -405,47 +409,55 @@ const Expenses = () => {
               </tr>
             </thead>
             <tbody>
-              {expenses.map((expense, index) => (
-                <tr
-                  key={index}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <td className="px-6 py-4">{formatDate(expense.date)}</td>
-                  <td className="px-6 py-4">{expense.category}</td>
-                  <td className="px-6 py-4">${expense.amount}</td>
+              {expenses.length > 0 ? (
+                expenses.map((expense, index) => (
+                  <tr
+                    key={index}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  >
+                    <td className="px-6 py-4">{formatDate(expense.date)}</td>
+                    <td className="px-6 py-4">{expense.category}</td>
+                    <td className="px-6 py-4">${expense.amount}</td>
 
-                  <td className="px-6 py-4 text-red-600">
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <RiDeleteBin6Line
-                          className="text-red-500 cursor-pointer"
-                          size={20}
-                        />
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete this expense and remove your data from our
-                            servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDeleteExpense(expense?._id)}
-                          >
-                            Delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <td className="px-6 py-4 text-red-600">
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <RiDeleteBin6Line
+                            className="text-red-500 cursor-pointer"
+                            size={20}
+                          />
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you absolutely sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will
+                              permanently delete this expense and remove your
+                              data from our servers.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteExpense(expense?._id)}
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={3} className="px-6 py-4 text-center dark:text-gray-50">
+                    No expenses availble. Add new Expense Details
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
           <div className="flex justify-between items-center px-4 py-3 sm:px-6">

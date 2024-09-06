@@ -27,6 +27,7 @@
     "cloudinary": "^2.4.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "finnhub-ts": "^1.0.7",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.427.0",
     "mongoose": "^8.5.3",
