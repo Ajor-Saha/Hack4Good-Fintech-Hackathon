@@ -125,7 +125,7 @@ const Header = () => {
             className="h-8 w-8"
           />
           <h1 className="text-gray-600 dark:text-gray-200 text-xl font-semibold">
-            Horizon
+           WealthLens
           </h1>
         </Link>
 

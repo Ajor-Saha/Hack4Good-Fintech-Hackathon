@@ -11,6 +11,7 @@ import { ApiResponse } from "@/types/ApiResponse";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 function SignUpForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,6 +53,13 @@ function SignUpForm() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    await signIn("google", {
+      callbackUrl: "/",
+      redirect: true,
+    });
+  };
+
   return (
     <div className="font-[sans-serif] pb-16 flex flex-col justify-center  items-center  px-5">
       <div className="flex items-center space-x-3 py-10">
@@ -62,7 +70,7 @@ function SignUpForm() {
           alt="Horizon logo"
           className="h-8 w-8"
         />
-        <h1 className="text-gray-600 text-xl font-semibold">Horizon</h1>
+        <h1 className="text-gray-600 text-xl font-semibold">WealthLens</h1>
       </div>
       <div className="w-full max-w-4xl mx-auto lg:border dark:lg:border-gray-800 rounded-md">
         <div className="grid md:grid-cols-2 lg:gap-24 gap-16 w-full sm:p-8 p-6 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded overflow-hidden">
@@ -74,6 +82,7 @@ function SignUpForm() {
               <button
                 type="button"
                 className="w-full px-4 py-3 flex items-center justify-center rounded text-[#333] text-base tracking-wider font-semibold border-none outline-none bg-gray-100 hover:bg-gray-200"
+                onClick={handleGoogleSignIn}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

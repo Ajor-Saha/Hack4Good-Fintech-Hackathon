@@ -30,7 +30,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Loader2 } from "lucide-react";
+import { Loader, Loader2 } from "lucide-react";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -180,8 +180,10 @@ const MyBudget = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newLimit, setNewLimit] = useState<number | null>(null);
   const { toast } = useToast();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const fetchUserBudgets = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await axios.get<ApiResponse>("/api/budget/get-budget");
       if (response.data.success) {
@@ -194,6 +196,8 @@ const MyBudget = () => {
       let errorMessage =
         axiosError.response?.data.message ??
         "Error while fetching user details";
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -303,7 +307,11 @@ const MyBudget = () => {
               </tr>
             </thead>
             <tbody>
-              {budgetCategories?.categories?.length > 0 ? (
+              {loading ? (
+                <div className="flex justify-center items-center mt-5">
+                  <Loader className="ml-36 h-4 w-4 animate-spin mx-auto" />
+                </div>
+              ) : budgetCategories?.categories?.length > 0 ? (
                 budgetCategories?.categories?.map((budget: any) => (
                   <tr
                     key={budget._id}

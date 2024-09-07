@@ -67,11 +67,9 @@ export async function GET(req: Request) {
         );
         break;
       case "last 6 months":
-        startDate = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth() - 5,
-          1
-        );
+        startDate = new Date(currentDate);
+        startDate.setMonth(currentDate.getMonth() - 6);
+        startDate.setDate(1); // Ensure start from 1st day of the month
         break;
       case "last year":
         startDate = new Date(currentDate.getFullYear() - 1, 0, 1); // 1st January of the previous year
@@ -131,7 +129,7 @@ export async function GET(req: Request) {
       } else {
         // For last 6 months, calculate savings based on the months in range and total expenses
         const monthlySalary = user.monthlySalary;
-        totalSavings = monthlySalary * monthsInRange - totalExpenses;
+        totalSavings = monthlySalary * (monthsInRange-1) - totalExpenses;
       }
 
       result = totalSavings;

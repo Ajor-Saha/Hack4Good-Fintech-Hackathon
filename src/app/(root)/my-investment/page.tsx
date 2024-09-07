@@ -38,7 +38,7 @@ import { stockSchema } from "@/schemas/stockSchema";
 import { ApiResponse } from "@/types/ApiResponse";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
-import { Loader2 } from "lucide-react";
+import { Loader, Loader2 } from "lucide-react";
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -68,6 +68,7 @@ const MyInvestment = () => {
   const [investmentData, setInvestmentData] = useState<any>({});
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [userStocks, setUserStocks] = useState<any>({});
   const [stockNews, setStockNews] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -83,6 +84,7 @@ const MyInvestment = () => {
   });
 
   const fetchStockData = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await axios.get<any>("/api/investment/market-trends");
       if (response.data.success) {
@@ -104,6 +106,8 @@ const MyInvestment = () => {
         axiosError.response?.data.message ??
         "Error while fetching stock details";
       toast({ description: errorMessage });
+    } finally {
+      setLoading(false);
     }
   }, [toast]);
 
@@ -126,11 +130,7 @@ const MyInvestment = () => {
       let errorMessage =
         axiosError.response?.data.message ??
         "Error while fetching user details";
-      toast({
-        title: "Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      
     }
   }, [toast]);
 
@@ -149,13 +149,9 @@ const MyInvestment = () => {
       const axiosError = error as AxiosError<ApiResponse>;
       let errorMessage =
         axiosError.response?.data.message ?? "Error while fetching stock news";
-      toast({
-        title: "Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      
     }
-  }, [toast]);
+  }, []);
 
   useEffect(() => {
     fetchStockData();
@@ -459,88 +455,94 @@ const MyInvestment = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {investmentData?.topGainers?.map(
-                      (stock: any, index: number) => (
-                        <tr
-                          key={index}
-                          className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                        >
-                          <td className="px-6 py-4">{stock?.ticker}</td>
-                          <td className="px-6 py-4">${stock?.price}</td>
-                          <td className="px-6 py-4">{stock?.volume}</td>
-                          <td className="px-6 py-4">
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <p className="text-blue-400 cursor-pointer">
-                                  Details
-                                </p>
-                              </DialogTrigger>
-                              <DialogContent className="sm:max-w-[425px]">
-                                <DialogHeader>
-                                  <DialogTitle>
-                                    {stock?.ticker} Stock
-                                  </DialogTitle>
-                                  <DialogDescription>
-                                    Here is Details about this stock. Include
-                                    stock name, company name, address etc
-                                  </DialogDescription>
-                                </DialogHeader>
-                                <div className="flex flex-col gap-3 text-sm">
-                                  <div className="flex gap-5">
-                                    <b>Stock Name: </b>{" "}
-                                    <p>{stock?.details.Name}</p>
+                    {loading ? (
+                      <div className="flex justify-center items-center mt-5">
+                        <Loader className="ml-48 h-4 w-4 animate-spin mx-auto" />
+                      </div>
+                    ) : (
+                      investmentData?.topGainers?.map(
+                        (stock: any, index: number) => (
+                          <tr
+                            key={index}
+                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                          >
+                            <td className="px-6 py-4">{stock?.ticker}</td>
+                            <td className="px-6 py-4">${stock?.price}</td>
+                            <td className="px-6 py-4">{stock?.volume}</td>
+                            <td className="px-6 py-4">
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <p className="text-blue-400 cursor-pointer">
+                                    Details
+                                  </p>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-[425px]">
+                                  <DialogHeader>
+                                    <DialogTitle>
+                                      {stock?.ticker} Stock
+                                    </DialogTitle>
+                                    <DialogDescription>
+                                      Here is Details about this stock. Include
+                                      stock name, company name, address etc
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  <div className="flex flex-col gap-3 text-sm">
+                                    <div className="flex gap-5">
+                                      <b>Stock Name: </b>{" "}
+                                      <p>{stock?.details.Name}</p>
+                                    </div>
+                                    <div className="flex gap-5">
+                                      <b>Stock Symbol: </b>{" "}
+                                      <p>{stock?.details.Symbol}</p>
+                                    </div>
+                                    <div className="flex gap-5">
+                                      <b>Stock AssetType: </b>{" "}
+                                      <p>{stock?.details.AssetType}</p>
+                                    </div>
+                                    <div className="flex gap-5">
+                                      <b>Stock Industry: </b>{" "}
+                                      <p>{stock?.details.Industry}</p>
+                                    </div>
+                                    <div className="flex gap-5">
+                                      <b>Stock County: </b>{" "}
+                                      <p>{stock?.details.Country}</p>
+                                    </div>
+                                    <div className="flex gap-5">
+                                      <b>Stock Currency: </b>{" "}
+                                      <p>{stock?.details.Currency}</p>
+                                    </div>
+                                    <div className="flex gap-5">
+                                      <b>Stock Sector: </b>{" "}
+                                      <p>{stock?.details.Sector}</p>
+                                    </div>
+                                    <div className="flex gap-5">
+                                      <b>Stock Address: </b>{" "}
+                                      <p>{stock?.details.Address}</p>
+                                    </div>
+                                    <div className="flex gap-5">
+                                      <b>Stock OfficialSite: </b>{" "}
+                                      <a
+                                        href={stock?.details.OfficialSite}
+                                        target="blank"
+                                        className="underline text-blue-600"
+                                      >
+                                        Official Website
+                                      </a>
+                                    </div>
                                   </div>
-                                  <div className="flex gap-5">
-                                    <b>Stock Symbol: </b>{" "}
-                                    <p>{stock?.details.Symbol}</p>
-                                  </div>
-                                  <div className="flex gap-5">
-                                    <b>Stock AssetType: </b>{" "}
-                                    <p>{stock?.details.AssetType}</p>
-                                  </div>
-                                  <div className="flex gap-5">
-                                    <b>Stock Industry: </b>{" "}
-                                    <p>{stock?.details.Industry}</p>
-                                  </div>
-                                  <div className="flex gap-5">
-                                    <b>Stock County: </b>{" "}
-                                    <p>{stock?.details.Country}</p>
-                                  </div>
-                                  <div className="flex gap-5">
-                                    <b>Stock Currency: </b>{" "}
-                                    <p>{stock?.details.Currency}</p>
-                                  </div>
-                                  <div className="flex gap-5">
-                                    <b>Stock Sector: </b>{" "}
-                                    <p>{stock?.details.Sector}</p>
-                                  </div>
-                                  <div className="flex gap-5">
-                                    <b>Stock Address: </b>{" "}
-                                    <p>{stock?.details.Address}</p>
-                                  </div>
-                                  <div className="flex gap-5">
-                                    <b>Stock OfficialSite: </b>{" "}
-                                    <a
-                                      href={stock?.details.OfficialSite}
-                                      target="blank"
-                                      className="underline text-blue-600"
-                                    >
-                                      Official Website
-                                    </a>
-                                  </div>
-                                </div>
-                              </DialogContent>
-                            </Dialog>
-                          </td>
-                          <td className="px-6 py-4 text-red-400">
-                            <a
-                              href={`https://finance.yahoo.com/quote/${stock?.ticker}`}
-                              target="blank"
-                            >
-                              Live
-                            </a>
-                          </td>
-                        </tr>
+                                </DialogContent>
+                              </Dialog>
+                            </td>
+                            <td className="px-6 py-4 text-red-400">
+                              <a
+                                href={`https://finance.yahoo.com/quote/${stock?.ticker}`}
+                                target="blank"
+                              >
+                                Live
+                              </a>
+                            </td>
+                          </tr>
+                        )
                       )
                     )}
                   </tbody>
@@ -728,8 +730,12 @@ const MyInvestment = () => {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={3} className="px-6 py-4 text-center text-sm dark:text-gray-50">
-                          Your Investment stock details display here. Add your invested stock details
+                        <td
+                          colSpan={3}
+                          className="px-6 py-4 text-center text-sm dark:text-gray-50"
+                        >
+                          Your Investment stock details display here. Add your
+                          invested stock details
                         </td>
                       </tr>
                     )}

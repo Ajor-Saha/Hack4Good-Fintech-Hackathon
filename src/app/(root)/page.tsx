@@ -51,6 +51,7 @@ const Home = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingRest, setLoadingReset] = useState<boolean>(false);
   const [range, setRange] = useState<string>("last 30 days");
+  const [rangeBar, setRangeBar] = useState<string>("last 6 months");
   const { toast } = useToast();
   const router = useRouter();
 
@@ -276,8 +277,8 @@ const Home = () => {
         <div className="xl:w-1/2  w-full px-10 py-5 mt-10 border border-gray-600">
           <div className="flex justify-between">
             <div className="pb-2">
-              <h2>Total Transaction</h2>
-              <span>$1023</span>
+              <h2>Transaction</h2>
+              <span>Expenses</span>
             </div>
             <Select onValueChange={(value) => setRange(value)}>
               <SelectTrigger className="w-[150px] lg:w-[140px]">
@@ -302,27 +303,24 @@ const Home = () => {
         <div className="xl:w-1/2 w-full px-10 py-5 mt-10 border border-gray-600">
           <div className="flex justify-between">
             <div className="pb-2">
-              <h2>Total Transaction</h2>
-              <span>$1023</span>
+              <h2>Expense Transaction</h2>
+              <span>Savings</span>
             </div>
-            <Select>
+            <Select onValueChange={(value) => setRangeBar(value)}>
               <SelectTrigger className="w-[150px] lg:w-[140px]">
                 <SelectValue placeholder="Select a Time" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Time Range</SelectLabel>
-                  <SelectItem value="last 7 days">Last 7 days</SelectItem>
-                  <SelectItem value="last 30 days">Last 30 days</SelectItem>
-                  <SelectItem value="last month">Last month</SelectItem>
                   <SelectItem value="last 6 months">Last 6 months</SelectItem>
-                  <SelectItem value="last year">Last year</SelectItem>
+                  <SelectItem value="last 6 year">Last 6 year</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
           </div>
           <div>
-            <CustomBarChart />
+            <CustomBarChart range = {rangeBar} />
           </div>
         </div>
       </div>

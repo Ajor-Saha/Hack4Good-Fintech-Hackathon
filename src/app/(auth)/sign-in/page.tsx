@@ -76,7 +76,7 @@ function SignInForm() {
             alt="Horizon logo"
             className="h-8 w-8"
           />
-          <h1 className="text-gray-600 text-xl dark:text-gray-300 font-semibold">Horizon</h1>
+          <h1 className="text-gray-600 text-xl dark:text-gray-300 font-semibold">WealthLens</h1>
         </div>
         <div className="pt-16 px-5  flex flex-col justify-center items-center">
           <h1 className="text-xl text-blue-500 font-bold border-b-2 border-blue-500 w-[200px] text-center">Our Features</h1>

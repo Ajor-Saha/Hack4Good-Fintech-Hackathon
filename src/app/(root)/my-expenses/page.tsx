@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2 } from "lucide-react";
+import { Loader, Loader2 } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -57,8 +57,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Expenses = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -66,6 +72,7 @@ const Expenses = () => {
   const [budgetCategories, setBudgetCategories] = useState<any>({});
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { data: session } = useSession();
   const [expenses, setExpenses] = useState<any[]>([]); // State to store threads
@@ -101,6 +108,7 @@ const Expenses = () => {
   }, []);
 
   const fetchUserExpenses = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await axios.get<any>("/api/expense/get-expenses", {
         params: {
@@ -122,6 +130,8 @@ const Expenses = () => {
       let errorMessage =
         axiosError.response?.data.message ??
         "Error while fetching expenses details";
+    } finally {
+      setLoading(false);
     }
   }, [timeFilter, searchCategory, currentPage]);
 
@@ -402,14 +412,20 @@ const Expenses = () => {
                 <th scope="col" className="px-6 py-3">
                   Amount
                 </th>
-
+                <th scope="col" className="px-6 py-3">
+                  Details
+                </th>
                 <th scope="col" className="px-6 py-3">
                   Delete
                 </th>
               </tr>
             </thead>
             <tbody>
-              {expenses.length > 0 ? (
+              {loading ? (
+                <div className="flex justify-center items-center mt-5">
+                  <Loader className="ml-52 h-4 w-4 animate-spin mx-auto" />
+                </div>
+              ) : expenses.length > 0 ? (
                 expenses.map((expense, index) => (
                   <tr
                     key={index}
@@ -418,7 +434,37 @@ const Expenses = () => {
                     <td className="px-6 py-4">{formatDate(expense.date)}</td>
                     <td className="px-6 py-4">{expense.category}</td>
                     <td className="px-6 py-4">${expense.amount}</td>
-
+                    <td className="px-6 py-4 text-blue-400">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <button>See</button>
+                        </DialogTrigger>
+                        <DialogContent className="w-full">
+                          <DialogHeader>
+                            <DialogTitle>See This Expense Details</DialogTitle>
+                            <DialogDescription>
+                              Description : {expense?.description}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-2">
+                            <div>
+                              <p>
+                                <b>Expense Category : </b>
+                                {expense?.category}
+                              </p>
+                              <p>
+                                <b>Expense Category : </b>
+                                {expense?.amount}
+                              </p>
+                              <p>
+                                <b>Expense Category : </b>
+                                {formatDate(expense.date)}
+                              </p>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </td>
                     <td className="px-6 py-4 text-red-600">
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
@@ -453,7 +499,10 @@ const Expenses = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={3} className="px-6 py-4 text-center dark:text-gray-50">
+                  <td
+                    colSpan={3}
+                    className="px-6 py-4 text-center dark:text-gray-50"
+                  >
                     No expenses availble. Add new Expense Details
                   </td>
                 </tr>
