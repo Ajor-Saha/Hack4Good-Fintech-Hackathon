@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# WealthLens
+[Visit Now](https://hack4-good-fintech-app.vercel.app) 🚀
 
-## Getting Started
+## <a name="description">Project Description </a>
+WealthLens was inspired by the need for a comprehensive and user-friendly platform to help individuals take control of their financial well-being. With so many people struggling to manage budgets, track expenses, and stay updated on investment trends, I wanted to create a solution that integrates all these tools into a single, accessible dashboard. My goal was to provide users with an easy way to monitor their financial status, make informed decisions, and optimize their spending habits using AI-driven insights. WealthLens is designed to empower users to build better financial habits and achieve their savings goals effortlessly.
 
-First, run the development server:
+## <a name="tech-stack">⚙️ Tech Stack</a>
+
+- Next.js
+- TypeScript
+- Mongodb
+- Next-Auth
+- React Hook Form
+- Zod
+- TailwindCSS
+- Shradcn
+
+
+## <a name="features">🔋 Features</a>
+
+### Set Budgets
+Create budget categories and set limits to track spending, with alerts when approaching the limit.
+
+### Track Expenses
+Input daily expenses, categorize them, and view detailed reports on spending patterns.
+
+### View Financial Dashboard
+Access an overview of financial status, including total expenses, savings, cash flow, net worth, and recent transactions.
+
+### Analyze with Charts
+View expense and savings data through line charts, bar charts, and pie charts to get a visual breakdown over various time ranges.
+
+### AI-Powered Insights
+Receive personalized insights that help optimize spending and savings goals.
+
+### Manage Investments
+Stay informed about market trends, track top gainers and losers in the stock market, and receive news and trends on saved stocks.
+
+### Savings Goals
+Set specific savings targets and track progress.
+
+## <a name="quick-start">🤸 Quick Start</a>
+
+Follow these steps to set up the project locally on your machine.
+
+**Prerequisites**
+
+Make sure you have the following installed on your machine:
+
+- [Git](https://git-scm.com/)
+- [Node.js](https://nodejs.org/en)
+- [npm](https://www.npmjs.com/) (Node Package Manager)
+
+**Cloning the Repository**
+
+```bash
+git clone https://github.com/Ajor-Saha/Hack4Good-Fintech-Hackathon.git
+```
+
+**Installation**
+
+Install the project dependencies using npm:
+
+```bash
+npm install
+```
+
+**Start the project**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+<details>
+<summary><code>.env.example</code></summary>
 
-## Learn More
+```env
+CLOUDINARY_CLOUD_NAME = 
+CLOUDINARY_API_KEY = 
+CLOUDINARY_API_SECRET = 
+MONGODB_URI = 
+GOOGLE_CLIENT_ID = 
+GOOGLE_CLIENT_SECRET = 
+NEXTAUTH_SECRET = 
+EMAIL_USER =
+EMAIL_PASS =
+YOUR_API_KEY = 
+GEMINI_API_KEY = 
+FINNHUB_API_KEY = 
+```
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+</details>
