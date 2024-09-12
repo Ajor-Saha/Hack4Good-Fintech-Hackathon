@@ -93,3 +93,10 @@ FINNHUB_API_KEY =
 ```
 
 </details>
+
+### Demo user data for test purpose
+
+```bash
+username : moneyAjor
+password: abc123
+```
