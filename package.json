@@ -28,6 +28,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "finnhub-ts": "^1.0.7",
+    "framer-motion": "^12.18.1",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.427.0",
     "mongoose": "^8.5.3",

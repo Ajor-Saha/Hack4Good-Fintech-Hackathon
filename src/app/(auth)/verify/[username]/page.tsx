@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ApiResponse } from "@/types/ApiResponse";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
+import { MdMoney } from "react-icons/md";
 
 const VerifyAccount = () => {
   const router = useRouter();
@@ -66,27 +67,21 @@ const VerifyAccount = () => {
   };
 
   return (
-    <div className="flex dark:text-gray-700 flex-col justify-center items-center min-h-screen">
+    <div className="flex flex-col justify-center items-center min-h-screen">
       <div className="flex items-center space-x-3 py-10">
-        <Image
-          src="/icons/logo.svg"
-          width={34}
-          height={34}
-          alt="Horizon logo"
-          className="h-8 w-8"
-        />
-        <h1 className="text-gray-600 text-xl font-semibold">Horizon</h1>
+        <MdMoney size={30} className="dark:text-gray-200" />
+        <h1 className="text-gray-600 dark:text-gray-200 text-xl font-semibold">WealthLens</h1>
       </div>
-      <div className="w-full max-w-md p-8 space-y-8 rounded-lg shadow-lg bg-slate-50">
+      <div className="w-full max-w-md p-8 space-y-8 rounded-lg border-2 border-gray-600 shadow-lg">
         <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
+          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6 dark:text-gray-100">
             Verify Your Account
           </h1>
-          <p className="mb-4">Enter the verification code sent to your email</p>
+          <p className="mb-4 dark:text-gray-300">Enter the verification code sent to your email</p>
         </div>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <label htmlFor="code" className="block font-semibold text-lg py-2">
+            <label htmlFor="code" className="block font-semibold text-lg py-2 dark:text-gray-200">
               Verification Code
             </label>
             <InputOTP
@@ -106,13 +101,13 @@ const VerifyAccount = () => {
               </InputOTPGroup>
             </InputOTP>
             {form.formState.errors.code && (
-              <p className="text-red-600">
+              <p className="text-red-600 dark:text-red-400">
                 {form.formState.errors.code.message}
               </p>
             )}
           </div>
-          <div className="text-right dark:text-gray-50">
-            <Button type="submit" disabled={loading} variant="outline" className="w-24">
+          <div className="text-right">
+            <Button type="submit" disabled={loading} variant="outline" className="w-24 dark:text-gray-200">
               {loading ? "verifying..." : "Verify"}
             </Button>
           </div>
@@ -121,6 +116,5 @@ const VerifyAccount = () => {
     </div>
   );
 };
-
 
 export default VerifyAccount;

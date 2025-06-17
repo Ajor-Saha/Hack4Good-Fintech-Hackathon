@@ -1,19 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { featureData } from "@/constants";
 import { signInSchema } from "@/schemas/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { User } from "next-auth";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { MdInvertColors, MdMoney } from "react-icons/md";
 import { z } from "zod";
 
 function SignInForm() {
@@ -66,37 +64,16 @@ function SignInForm() {
   };
 
   return (
-    <div className="font-[sans-serif]  px-5 mb-10">
+    <div className="font-[sans-serif] px-5 mb-10">
       <div className="py-2 flex flex-col mb-10">
         <div className="flex items-center space-x-3 mt-2">
-          <Image
-            src="/icons/logo.svg"
-            width={34}
-            height={34}
-            alt="Horizon logo"
-            className="h-8 w-8"
-          />
+          <div className="relative w-8 h-8">
+            <MdMoney size={30}/>
+          </div>
           <h1 className="text-gray-600 text-xl dark:text-gray-300 font-semibold">WealthLens</h1>
         </div>
-        <div className="pt-16 px-5  flex flex-col justify-center items-center">
-          <h1 className="text-xl text-blue-500 font-bold border-b-2 border-blue-500 w-[200px] text-center">Our Features</h1>
-          <div className="bg-gray-600 p-5 mt-5 rounded-lg">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center gap-5">
-            {featureData.map((feature, index) => (
-              <div key={index} className="bg-white w-full border border-gray-200 rounded-lg  dark:bg-gray-800 dark:border-gray-800 shadow-lg p-5">
-                <h1 className="text-lg font-semibold">{feature.heading}</h1>
-                <p className="text-gray-400">{feature.description}</p>
-                <div className="w-full mt-5">
-                  <Image src={feature.imgURL} alt="pic" width={60} height={60} className="w-full rounded-md"></Image>
-                </div>
-              </div>
-            ))}
-            </div>
-            
-          </div>
-        </div>
       </div>
-      <div className="w-full   max-w-4xl mx-auto">
+      <div className="w-full max-w-4xl mx-auto">
         <div className="grid md:grid-cols-2 lg:gap-24 gap-16 w-full sm:p-8 p-6 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded overflow-hidden">
           <div className="max-md:order-1 space-y-6">
             <div className="md:mb-16 mb-8">
