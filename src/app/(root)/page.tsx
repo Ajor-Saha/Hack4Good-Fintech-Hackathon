@@ -40,6 +40,7 @@ import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
+import { MdSavings } from "react-icons/md";
 
 const Home = () => {
   const { data: session } = useSession();
@@ -212,64 +213,95 @@ const Home = () => {
           description="Savings for"
         />
 
-        <Card className="w-[250px] flex flex-col justify-between h-[180px] mx-auto mb-5">
-          <CardHeader>
-            <CardDescription>Vacation or an Emergency fund.</CardDescription>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="text-gray-500  font-bold text-lg"
-                >
-                  {goalAmount > 0 ? "Edit Goals" : "Create Goals"}
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Saving Goals</DialogTitle>
-                  <DialogDescription>
-                    Set or update your saving goal. By clicking <b>reseting</b>{" "}
-                    button new goal created with current date
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="goalAmount" className="text-right">
-                      Goal Amount
-                    </Label>
-                    <Input
-                      id="goalAmount"
-                      placeholder="$1000"
-                      className="col-span-3"
-                      type="number"
-                      value={goalAmount}
-                      onChange={handleGoalChange}
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  {goalAmount > 0 ? (
-                    <Button onClick={handleResetGoal}>Reset</Button>
-                  ) : (
-                    ""
-                  )}
+        <Card className="w-full sm:w-[300px] md:w-[350px] flex flex-col justify-between h-[220px] mx-auto mb-5 hover:shadow-lg transition-all duration-300 border-2 border-gray-200 dark:border-gray-700">
+          <CardHeader className="pb-2 space-y-2">
+            <div className="flex items-center justify-between">
+              <CardDescription className="text-base font-medium">Savings Goal</CardDescription>
+              <Dialog>
+                <DialogTrigger asChild>
                   <Button
-                    type="submit"
-                    onClick={handleSaveGoal}
-                    disabled={loading}
+                    variant="outline"
+                    className="text-blue-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 font-semibold"
                   >
-                    {loading ? "Saving...." : "Save changes"}
+                    {goalAmount > 0 ? "Edit Goals" : "Create Goals"}
                   </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </CardHeader>
-          <CardContent className="flex flex-col justify-between">
-            <div className="flex justify-between">
-              <span>${saveData?.currentSave || 0}</span>
-              <span>${goalAmount || 0}</span>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl">Saving Goals</DialogTitle>
+                    <DialogDescription className="text-gray-600 dark:text-gray-300">
+                      Set or update your saving goal. Click <b>reset</b> to create a new goal with the current date.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="goalAmount" className="text-right font-medium">
+                        Goal Amount
+                      </Label>
+                      <Input
+                        id="goalAmount"
+                        placeholder="$1000"
+                        className="col-span-3"
+                        type="number"
+                        value={goalAmount}
+                        onChange={handleGoalChange}
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter className="gap-2">
+                    {goalAmount > 0 && (
+                      <Button 
+                        onClick={handleResetGoal}
+                        variant="outline"
+                        className="hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
+                      >
+                        Reset
+                      </Button>
+                    )}
+                    <Button
+                      type="submit"
+                      onClick={handleSaveGoal}
+                      disabled={loading}
+                      className="bg-blue-500 hover:bg-blue-600"
+                    >
+                      {loading ? (
+                        <span className="flex items-center gap-2">
+                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                          Saving...
+                        </span>
+                      ) : (
+                        "Save changes"
+                      )}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
-            <Progress value={progressValue} />
+            <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+              <MdSavings className="w-5 h-5" />
+              <span className="text-sm">Track your savings progress</span>
+            </div>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3 pt-0">
+            <div className="flex justify-between items-center">
+              <div className="flex flex-col">
+                <span className="text-sm text-gray-500 dark:text-gray-400">Current</span>
+                <span className="text-xl font-semibold text-green-500">${(saveData?.currentSave || 0).toFixed(2)}</span>
+              </div>
+              <div className="flex flex-col items-end">
+                <span className="text-sm text-gray-500 dark:text-gray-400">Goal</span>
+                <span className="text-xl font-semibold">${(goalAmount || 0).toFixed(2)}</span>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Progress 
+                value={progressValue} 
+                className="h-2.5 bg-gray-100 dark:bg-gray-700"
+              />
+              <div className="text-right text-sm text-gray-500 dark:text-gray-400">
+                {progressValue.toFixed(0)}% completed
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
