@@ -1,6 +1,12 @@
 # WealthLens
 [Visit Now](https://hack4-good-fintech-app.vercel.app) 🚀
 
+## 🎥 Video Demo
+
+[![Watch the demo](https://img.youtube.com/vi/jyZyBMIqJtQ/hqdefault.jpg)](https://youtu.be/jyZyBMIqJtQ?si=6Nia3n1ZhX9Ph2mh)
+
+[Watch on YouTube](https://youtu.be/jyZyBMIqJtQ?si=6Nia3n1ZhX9Ph2mh)
+
 ## <a name="description">Project Description </a>
 WealthLens was inspired by the need for a comprehensive and user-friendly platform to help individuals take control of their financial well-being. With so many people struggling to manage budgets, track expenses, and stay updated on investment trends, I wanted to create a solution that integrates all these tools into a single, accessible dashboard. My goal was to provide users with an easy way to monitor their financial status, make informed decisions, and optimize their spending habits using AI-driven insights. WealthLens is designed to empower users to build better financial habits and achieve their savings goals effortlessly.
 
